@@ -27,17 +27,26 @@ export class GmailService {
       throw new Error('Please provide a valid 16-character Google App Password.');
     }
 
-    // 1. Verify SMTP connection with Google
+    // 1. Verify SMTP connection with Google (with explicit timeouts to prevent 502 on Render)
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: cleanEmail,
         pass: cleanPass,
       },
+      connectionTimeout: 10000,  // 10s to establish TCP connection
+      greetingTimeout: 10000,    // 10s for SMTP greeting
+      socketTimeout: 15000,      // 15s per socket operation
     });
 
     try {
-      await transporter.verify();
+      // Race against a 20s hard timeout to avoid Render's 30s HTTP timeout causing 502
+      await Promise.race([
+        transporter.verify(),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Gmail SMTP verification timed out. Please try again in a moment.')), 20000)
+        ),
+      ]);
     } catch (err: any) {
       console.error('Nodemailer verification error:', err);
       if (err.code === 'EAUTH' || err.responseCode === 535) {
