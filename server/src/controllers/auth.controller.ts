@@ -74,17 +74,19 @@ export class AuthController {
 
       // Set httpOnly cookies
       const isProd = ENV.NODE_ENV === 'production';
-      res.cookie('mailmint_access_token', accessToken, {
+      const cookieOptions: any = {
         httpOnly: true,
         secure: isProd,
-        sameSite: 'lax',
+        sameSite: isProd ? 'none' : 'lax',
+      };
+
+      res.cookie('mailmint_access_token', accessToken, {
+        ...cookieOptions,
         maxAge: 15 * 60 * 1000,
       });
 
       res.cookie('mailmint_refresh_token', refreshToken, {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: 'lax',
+        ...cookieOptions,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -117,17 +119,19 @@ export class AuthController {
       const refreshToken = generateRefreshToken(tokenPayload);
 
       const isProd = ENV.NODE_ENV === 'production';
-      res.cookie('mailmint_access_token', accessToken, {
+      const cookieOptions: any = {
         httpOnly: true,
         secure: isProd,
-        sameSite: 'lax',
+        sameSite: isProd ? 'none' : 'lax',
+      };
+
+      res.cookie('mailmint_access_token', accessToken, {
+        ...cookieOptions,
         maxAge: 15 * 60 * 1000,
       });
 
       res.cookie('mailmint_refresh_token', refreshToken, {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: 'lax',
+        ...cookieOptions,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -149,8 +153,14 @@ export class AuthController {
   }
 
   static async logout(req: Request, res: Response) {
-    res.clearCookie('mailmint_access_token');
-    res.clearCookie('mailmint_refresh_token');
+    const isProd = ENV.NODE_ENV === 'production';
+    const cookieOptions: any = {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    };
+    res.clearCookie('mailmint_access_token', cookieOptions);
+    res.clearCookie('mailmint_refresh_token', cookieOptions);
     return res.json({ success: true, message: 'Logged out successfully.' });
   }
 
@@ -177,7 +187,7 @@ export class AuthController {
     res.cookie('mailmint_access_token', newAccessToken, {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax',
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 15 * 60 * 1000,
     });
 

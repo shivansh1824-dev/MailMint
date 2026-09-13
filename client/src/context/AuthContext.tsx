@@ -38,15 +38,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await api.post<{ success: boolean; user: User }>('/auth/login', { email, password });
+    const res = await api.post<{ success: boolean; user: User; accessToken?: string }>('/auth/login', { email, password });
     if (res.success && res.user) {
+      if (res.accessToken) localStorage.setItem('mailmint_token', res.accessToken);
       setUser(res.user);
     }
   };
 
   const register = async (email: string, password: string, name?: string) => {
-    const res = await api.post<{ success: boolean; user: User }>('/auth/register', { email, password, name });
+    const res = await api.post<{ success: boolean; user: User; accessToken?: string }>('/auth/register', { email, password, name });
     if (res.success && res.user) {
+      if (res.accessToken) localStorage.setItem('mailmint_token', res.accessToken);
       setUser(res.user);
     }
   };
@@ -55,6 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await api.post('/auth/logout');
     } finally {
+      localStorage.removeItem('mailmint_token');
       setUser(null);
     }
   };

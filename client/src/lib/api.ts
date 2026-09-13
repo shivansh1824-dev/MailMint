@@ -1,4 +1,8 @@
-const API_BASE = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+let rawBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+if (rawBase.startsWith('http') && !rawBase.endsWith('/api')) {
+  rawBase = `${rawBase}/api`;
+}
+const API_BASE = rawBase;
 
 interface RequestOptions extends RequestInit {
   data?: any;
@@ -14,6 +18,11 @@ export async function apiRequest<T = any>(
   const reqHeaders: Record<string, string> = {
     ...(headers as Record<string, string>),
   };
+
+  const storedToken = typeof window !== 'undefined' ? localStorage.getItem('mailmint_token') : null;
+  if (storedToken && !reqHeaders['Authorization']) {
+    reqHeaders['Authorization'] = `Bearer ${storedToken}`;
+  }
 
   if (!isFormData && data !== undefined) {
     reqHeaders['Content-Type'] = 'application/json';
