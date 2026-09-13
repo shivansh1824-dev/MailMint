@@ -1,0 +1,315 @@
+/* MailMint Clipper Popup Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  width: 360px;
+  background-color: #0D1117;
+  color: #F3F4F6;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.popup-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #161B22;
+  border-bottom: 1px solid #2D3A4A;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #00C896, #00A878);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 200, 150, 0.3);
+}
+
+.brand-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #FFFFFF;
+  display: block;
+  letter-spacing: -0.02em;
+}
+
+.brand-sub {
+  font-size: 10px;
+  color: #9CA3AF;
+  font-mono: true;
+  display: block;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(0, 200, 150, 0.12);
+  color: #00C896;
+  border: 1px solid rgba(0, 200, 150, 0.25);
+}
+
+.status-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #00C896;
+  box-shadow: 0 0 6px #00C896;
+}
+
+.content-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preview-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background-color: #161B22;
+  border: 1px solid #2D3A4A;
+  border-radius: 8px;
+}
+
+.preview-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2D3A4A, #1F2937);
+  border: 2px solid #00C896;
+  color: #00C896;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.preview-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.preview-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview-role {
+  font-size: 11px;
+  color: #9CA3AF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview-company-badge {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 10px;
+  padding: 1px 6px;
+  background: rgba(0, 200, 150, 0.15);
+  color: #00C896;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 10px;
+  background-color: #1F2937;
+  color: #E5E7EB;
+  border: 1px solid #2D3A4A;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #2D3A4A;
+  color: #FFFFFF;
+}
+
+.clip-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #9CA3AF;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 6px 9px;
+  background-color: #111827;
+  border: 1px solid #2D3A4A;
+  border-radius: 5px;
+  color: #FFFFFF;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input:focus, textarea:focus {
+  border-color: #00C896;
+}
+
+textarea {
+  resize: none;
+}
+
+.actions-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 9px;
+  background-color: #00C896;
+  color: #0D1117;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.05s;
+  box-shadow: 0 0 12px rgba(0, 200, 150, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: #00B084;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-accent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px;
+  background-color: #161B22;
+  color: #00C896;
+  border: 1px solid rgba(0, 200, 150, 0.35);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-accent:hover {
+  background-color: rgba(0, 200, 150, 0.1);
+}
+
+.footer {
+  padding: 8px 16px;
+  background-color: #111827;
+  border-top: 1px solid #1F2937;
+  text-align: center;
+}
+
+.footer-link {
+  font-size: 11px;
+  color: #9CA3AF;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-link:hover {
+  color: #00C896;
+}
+
+.toast {
+  padding: 6px 12px;
+  margin: 8px 16px 0;
+  border-radius: 6px;
+  font-size: 11px;
+  text-align: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.toast.success {
+  background-color: rgba(0, 200, 150, 0.15);
+  color: #00C896;
+  border: 1px solid rgba(0, 200, 150, 0.3);
+}
+
+.toast.error {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

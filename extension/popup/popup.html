@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailMint Clipper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D1117" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 2-7 20-4-9-9-4Z" />
+            <path d="M22 2 11 13" />
+          </svg>
+        </div>
+        <div>
+          <span class="brand-title">MailMint</span>
+          <span class="brand-sub">Clipper v1.0</span>
+        </div>
+      </div>
+      <div id="connectionStatus" class="status-pill connected">
+        <span class="dot"></span>
+        <span>Ready</span>
+      </div>
+    </header>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- Main Content Form -->
+    <div class="content-body">
+      <!-- Extraction Preview Card -->
+      <div class="preview-card">
+        <div class="preview-avatar" id="avatarPreview">R</div>
+        <div class="preview-info">
+          <div class="preview-name" id="namePreview">No profile detected</div>
+          <div class="preview-role" id="rolePreview">Open a LinkedIn profile page</div>
+          <div class="preview-company-badge" id="companyBadge" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Quick Action: Detect Button -->
+      <button type="button" id="btnExtract" class="btn-secondary btn-sm">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+          <path d="M3 3v5h5" />
+          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+          <path d="M16 21h5v-5" />
+        </svg>
+        Auto-Extract from Page
+      </button>
+
+      <!-- Editable Profile Fields -->
+      <form id="clipForm" class="clip-form">
+        <div class="form-group">
+          <label for="contactName">Recruiter Name *</label>
+          <input type="text" id="contactName" required placeholder="e.g. Sarah Jenkins">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contactCompany">Company *</label>
+            <input type="text" id="contactCompany" required placeholder="e.g. Stripe">
+          </div>
+          <div class="form-group">
+            <label for="contactTitle">Job Title / Role</label>
+            <input type="text" id="contactTitle" placeholder="e.g. Senior Tech Recruiter">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contactEmail">Email (if known)</label>
+            <input type="email" id="contactEmail" placeholder="sarah@stripe.com">
+          </div>
+          <div class="form-group">
+            <label for="contactLocation">Location</label>
+            <input type="text" id="contactLocation" placeholder="San Francisco, CA">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactNotes">Personal Angle / Notes</label>
+          <textarea id="contactNotes" rows="2" placeholder="e.g. Mentioned distributed systems post on X"></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="actions-stack">
+          <button type="submit" id="btnSaveContact" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save to MailMint Contacts
+          </button>
+
+          <button type="button" id="btnDraftEmail" class="btn-accent">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m22 2-7 20-4-9-9-4Z" />
+              <path d="M22 2 11 13" />
+            </svg>
+            Draft AI Email in MailMint
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <a href="http://localhost:5173/dashboard" target="_blank" class="footer-link">
+        Open MailMint Dashboard &rarr;
+      </a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
