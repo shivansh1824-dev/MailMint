@@ -27,16 +27,25 @@ export class GmailService {
       throw new Error('Please provide a valid 16-character Google App Password.');
     }
 
-    // 1. Verify SMTP connection with Google (with explicit timeouts to prevent 502 on Render)
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
+    // 1. Verify SMTP connection with Google
+    // Use explicit host/port + force IPv4 (family: 4) because Render free tier
+    // does not support outbound IPv6 — nodemailer with service:'gmail' would pick
+    // an IPv6 address and fail with ENETUNREACH.
+    // We pass a custom dnsLookup that filters to IPv4 only.
+    const { lookup } = require('dns');
+    const ipv4Lookup = (hostname: string, opts: any, cb: any) => lookup(hostname, { ...opts, family: 4 }, cb);
+    const transporter = (nodemailer as any).createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,         // STARTTLS (not SSL/465)
       auth: {
         user: cleanEmail,
         pass: cleanPass,
       },
-      connectionTimeout: 10000,  // 10s to establish TCP connection
-      greetingTimeout: 10000,    // 10s for SMTP greeting
-      socketTimeout: 15000,      // 15s per socket operation
+      dnsLookup: ipv4Lookup,  // Force IPv4 — Render free tier blocks IPv6 outbound
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
     });
 
     try {
@@ -222,12 +231,20 @@ export class GmailService {
       const senderEmail = user.gmail_email || ENV.SMTP_USER;
       const plainPassword = appPasswordEncrypted ? decryptAES256(appPasswordEncrypted) : ENV.SMTP_PASS;
 
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
+      const { lookup } = require('dns');
+      const ipv4Lookup = (hostname: string, opts: any, cb: any) => lookup(hostname, { ...opts, family: 4 }, cb);
+      const transporter = (nodemailer as any).createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,         // STARTTLS
         auth: {
           user: senderEmail,
           pass: plainPassword,
         },
+        dnsLookup: ipv4Lookup,  // Force IPv4 — Render free tier blocks IPv6 outbound
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000,
       });
 
       const info = await transporter.sendMail({
