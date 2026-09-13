@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { z } from 'zod';
 import { DbService } from '../services/supabase.service';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt';
@@ -199,7 +200,26 @@ export class AuthController {
 
   static async forgotPassword(req: Request, res: Response) {
     const { email } = req.body;
-    // Password reset simulation / response
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email address is required.' });
+    }
+
+    const user = await DbService.findOne('users', { email: email.toLowerCase().trim() });
+    if (user) {
+      // Generate a cryptographically secure 32-byte hex token with 1-hour expiry
+      const rawToken = crypto.randomBytes(32).toString('hex');
+      const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+      await DbService.update('users', { id: user.id }, {
+        reset_token: hashedToken,
+        reset_token_expires_at: expiresAt,
+      });
+
+      console.log(`[Security] Password reset requested for ${email}. Token generated.`);
+    }
+
+    // Always return success message to prevent user enumeration
     return res.json({
       success: true,
       message: 'If an account exists with that email, password reset instructions have been sent.',
@@ -207,18 +227,44 @@ export class AuthController {
   }
 
   static async resetPassword(req: Request, res: Response) {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Email and new password required.' });
+    const { token, password, email } = req.body;
+    if (!token || !password) {
+      return res.status(400).json({ success: false, message: 'Reset token and new password are required.' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
     }
 
-    const user = await DbService.findOne('users', { email });
-    if (user) {
-      const passwordHash = await bcrypt.hash(password, 12);
-      await DbService.update('users', { id: user.id }, { password_hash: passwordHash });
+    const hashedToken = crypto.createHash('sha256').update(token.trim()).digest('hex');
+    const now = new Date().toISOString();
+
+    // Query user by reset token or match email if provided
+    let user = await DbService.findOne('users', { reset_token: hashedToken });
+    if (!user && email) {
+      const candidate = await DbService.findOne('users', { email: email.toLowerCase().trim() });
+      if (candidate && candidate.reset_token === hashedToken) {
+        user = candidate;
+      }
     }
 
-    return res.json({ success: true, message: 'Password reset successfully. You can now log in.' });
+    if (!user || !user.reset_token_expires_at || user.reset_token_expires_at < now) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password reset link is invalid or has expired. Please request a new one.',
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    await DbService.update('users', { id: user.id }, {
+      password_hash: passwordHash,
+      reset_token: null,
+      reset_token_expires_at: null,
+    });
+
+    return res.json({
+      success: true,
+      message: 'Password has been securely reset. You can now log in with your new credentials.',
+    });
   }
 
   static async me(req: Request, res: Response) {

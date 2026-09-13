@@ -128,17 +128,17 @@ export const TemplatesPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[28px] font-bold text-white tracking-tight font-sans">
+          <h1 className="text-[28px] font-bold text-[#17201C] dark:text-white tracking-tight font-sans">
             Outreach Templates & Marketplace
           </h1>
-          <p className="text-[13px] text-[#9CA3AF]">
+          <p className="text-[13px] text-[#5E6863] dark:text-[#9CA3AF]">
             Reusable email frameworks with dynamic variable interpolation and community sharing
           </p>
         </div>
 
         <button
           onClick={() => setCreateModalOpen(true)}
-          className="flex items-center gap-1.5 px-4 py-2 bg-[#00C896] hover:bg-[#00b084] text-[#0D1117] text-[13px] font-bold rounded-[6px] transition-colors shadow-[0_0_12px_rgba(0,200,150,0.2)]"
+          className="flex items-center gap-1.5 px-4 py-2 bg-[#00A878] hover:bg-[#008f66] dark:bg-[#00C896] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] text-[13px] font-bold rounded-[6px] transition-colors shadow-[0_0_12px_rgba(0,200,150,0.2)]"
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>Create Template</span>
@@ -146,14 +146,14 @@ export const TemplatesPage: React.FC = () => {
       </div>
 
       {/* Tabs & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#2D3A4A]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#DDE3DF] dark:border-[#2D3A4A]">
         <div className="flex items-center gap-4 text-[14px]">
           <button
             onClick={() => setActiveTab('my')}
             className={`pb-2.5 font-medium transition-colors ${
               activeTab === 'my'
-                ? 'border-b-2 border-[#00C896] text-white font-semibold'
-                : 'text-[#9CA3AF] hover:text-white'
+                ? 'border-b-2 border-[#00A878] dark:border-[#00C896] text-[#17201C] dark:text-white font-semibold'
+                : 'text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white'
             }`}
           >
             My Templates ({myTemplates.length})
@@ -162,23 +162,23 @@ export const TemplatesPage: React.FC = () => {
             onClick={() => setActiveTab('marketplace')}
             className={`pb-2.5 font-medium transition-colors flex items-center gap-1.5 ${
               activeTab === 'marketplace'
-                ? 'border-b-2 border-[#00C896] text-white font-semibold'
-                : 'text-[#9CA3AF] hover:text-white'
+                ? 'border-b-2 border-[#00A878] dark:border-[#00C896] text-[#17201C] dark:text-white font-semibold'
+                : 'text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white'
             }`}
           >
-            <Globe className="w-3.5 h-3.5 text-[#00C896]" />
+            <Globe className="w-3.5 h-3.5 text-[#00A878] dark:text-[#00C896]" />
             <span>Community Marketplace ({marketplaceTemplates.length})</span>
           </button>
         </div>
 
         <div className="relative max-w-xs w-full">
-          <Search className="w-3.5 h-3.5 text-[#6B7280] absolute left-3 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-[#8A948F] dark:text-[#6B7280] absolute left-3 top-2.5" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search templates..."
-            className="w-full pl-8 pr-3 py-1.5 bg-[#161B22] border border-[#2D3A4A] rounded-[6px] text-[12px] text-white placeholder-[#6B7280] focus:border-[#00C896] outline-none"
+            className="w-full pl-8 pr-3 py-1.5 bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[6px] text-[12px] text-[#17201C] dark:text-white placeholder-[#8A948F] dark:placeholder-[#6B7280] focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
           />
         </div>
       </div>
@@ -188,33 +188,33 @@ export const TemplatesPage: React.FC = () => {
         {filtered.map((tpl) => (
           <div
             key={tpl.id}
-            className="p-5 bg-[#161B22] border border-[#2D3A4A] hover:border-[#00C896]/40 rounded-[8px] flex flex-col justify-between space-y-4 transition-all"
+            className="p-5 bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] hover:border-[#00A878]/50 dark:hover:border-[#00C896]/40 rounded-[8px] flex flex-col justify-between space-y-4 transition-all shadow-sm dark:shadow-none"
           >
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-[#111827] text-[#00C896] border border-[#00C896]/20">
+                <span className="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-[#F0FDF4] dark:bg-[#111827] text-[#00A878] dark:text-[#00C896] border border-[#00A878]/20 dark:border-[#00C896]/20">
                   {tpl.category}
                 </span>
                 {tpl.author_alias && (
-                  <span className="text-[11px] text-[#6B7280] font-mono">
+                  <span className="text-[11px] text-[#5E6863] dark:text-[#6B7280] font-mono">
                     by @{tpl.author_alias}
                   </span>
                 )}
               </div>
 
-              <h3 className="text-[15px] font-bold text-white mb-1.5">{tpl.name}</h3>
-              <p className="text-[12px] font-semibold text-[#9CA3AF] mb-3 truncate">
+              <h3 className="text-[15px] font-bold text-[#17201C] dark:text-white mb-1.5">{tpl.name}</h3>
+              <p className="text-[12px] font-semibold text-[#5E6863] dark:text-[#9CA3AF] mb-3 truncate">
                 {tpl.subject}
               </p>
-              <p className="text-[12px] text-[#6B7280] line-clamp-3 leading-relaxed font-serif">
+              <p className="text-[12px] text-[#5E6863] dark:text-[#6B7280] line-clamp-3 leading-relaxed font-serif">
                 {tpl.body}
               </p>
             </div>
 
-            <div className="pt-3 border-t border-[#2D3A4A]/60 flex items-center justify-between text-[12px]">
+            <div className="pt-3 border-t border-[#DDE3DF] dark:border-[#2D3A4A]/60 flex items-center justify-between text-[12px]">
               <button
                 onClick={() => setPreviewTemplate(tpl)}
-                className="flex items-center gap-1 text-[#00C896] hover:underline font-medium"
+                className="flex items-center gap-1 text-[#00A878] dark:text-[#00C896] hover:underline font-medium"
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span>Preview with Data</span>
@@ -224,7 +224,7 @@ export const TemplatesPage: React.FC = () => {
                 {activeTab === 'marketplace' ? (
                   <button
                     onClick={() => handleImport(tpl.id)}
-                    className="flex items-center gap-1 px-2.5 py-1 bg-[#00C896]/15 hover:bg-[#00C896] text-[#00C896] hover:text-[#0D1117] font-semibold rounded text-[11px] transition-colors"
+                    className="flex items-center gap-1 px-2.5 py-1 bg-[#00A878]/15 dark:bg-[#00C896]/15 hover:bg-[#00A878] dark:hover:bg-[#00C896] text-[#00A878] dark:text-[#00C896] hover:text-white dark:hover:text-[#0D1117] font-semibold rounded text-[11px] transition-colors"
                   >
                     <Download className="w-3 h-3" />
                     <span>Import</span>
@@ -233,7 +233,7 @@ export const TemplatesPage: React.FC = () => {
                   <>
                     <button
                       onClick={() => handleDuplicate(tpl.id)}
-                      className="p-1.5 text-[#9CA3AF] hover:text-white rounded"
+                      className="p-1.5 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white rounded"
                       title="Duplicate Template"
                     >
                       <Copy className="w-3.5 h-3.5" />
@@ -241,7 +241,7 @@ export const TemplatesPage: React.FC = () => {
                     {tpl.is_public ? (
                       <button
                         onClick={() => handleUnpublish(tpl.id)}
-                        className="text-[11px] text-amber-400 hover:underline"
+                        className="text-[11px] text-amber-600 dark:text-amber-400 hover:underline"
                       >
                         Unpublish
                       </button>
@@ -251,7 +251,7 @@ export const TemplatesPage: React.FC = () => {
                           setTargetTemplateToPublish(tpl);
                           setPublishModalOpen(true);
                         }}
-                        className="p-1.5 text-[#9CA3AF] hover:text-[#00C896] rounded"
+                        className="p-1.5 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#00A878] dark:hover:text-[#00C896] rounded"
                         title="Publish to Marketplace"
                       >
                         <Share2 className="w-3.5 h-3.5" />
@@ -274,22 +274,22 @@ export const TemplatesPage: React.FC = () => {
 
       {/* Publish to Marketplace Modal */}
       {publishModalOpen && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="w-full max-w-md bg-[#161B22] border border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative">
+        <div className="fixed inset-0 bg-black/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="w-full max-w-md bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative">
             <button
               onClick={() => setPublishModalOpen(false)}
-              className="absolute top-4 right-4 text-[#9CA3AF] hover:text-white"
+              className="absolute top-4 right-4 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
-            <h2 className="text-[18px] font-bold text-white mb-2">Publish to Marketplace</h2>
-            <p className="text-[12px] text-[#9CA3AF] mb-4">
+            <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white mb-2">Publish to Marketplace</h2>
+            <p className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF] mb-4">
               Share your effective template with the MailMint community. Your email address remains private; you will be credited anonymously through an alias.
             </p>
 
             <form onSubmit={handlePublish} className="space-y-4">
               <div>
-                <label className="block text-[12px] text-[#9CA3AF] mb-1">
+                <label className="block text-[12px] text-[#5E6863] dark:text-[#9CA3AF] mb-1">
                   Author Alias (Public Name) *
                 </label>
                 <input
@@ -298,7 +298,7 @@ export const TemplatesPage: React.FC = () => {
                   value={authorAlias}
                   onChange={(e) => setAuthorAlias(e.target.value)}
                   placeholder="e.g. StanfordHacker, CrimsonDev"
-                  className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-[13px] text-white focus:border-[#00C896] outline-none"
+                  className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[13px] text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                 />
               </div>
 
@@ -306,13 +306,13 @@ export const TemplatesPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setPublishModalOpen(false)}
-                  className="px-4 py-2 text-[13px] text-[#9CA3AF] hover:text-white"
+                  className="px-4 py-2 text-[13px] text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#00C896] text-[#0D1117] font-semibold text-[13px] rounded hover:bg-[#00b084]"
+                  className="px-5 py-2 bg-[#00A878] hover:bg-[#008f66] dark:bg-[#00C896] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] font-semibold text-[13px] rounded transition-colors"
                 >
                   Publish Publicly
                 </button>
@@ -324,35 +324,35 @@ export const TemplatesPage: React.FC = () => {
 
       {/* Create Template Modal */}
       {createModalOpen && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="w-full max-w-xl bg-[#161B22] border border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative">
+        <div className="fixed inset-0 bg-black/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="w-full max-w-xl bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative">
             <button
               onClick={() => setCreateModalOpen(false)}
-              className="absolute top-4 right-4 text-[#9CA3AF] hover:text-white"
+              className="absolute top-4 right-4 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
-            <h2 className="text-[18px] font-bold text-white mb-4">Create Email Template</h2>
+            <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white mb-4">Create Email Template</h2>
 
             <form onSubmit={handleCreateTemplate} className="space-y-4 text-[13px]">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#9CA3AF] mb-1">Template Name *</label>
+                  <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Template Name *</label>
                   <input
                     type="text"
                     required
                     value={newTemplate.name}
                     onChange={(e) => setNewTemplate({ ...newTemplate, name: e.target.value })}
                     placeholder="Internship Cold Outreach"
-                    className="w-full px-3 py-1.5 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+                    className="w-full px-3 py-1.5 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-[#9CA3AF] mb-1">Category</label>
+                  <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Category</label>
                   <select
                     value={newTemplate.category}
                     onChange={(e) => setNewTemplate({ ...newTemplate, category: e.target.value })}
-                    className="w-full px-3 py-1.5 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+                    className="w-full px-3 py-1.5 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                   >
                     <option value="internship">Internship</option>
                     <option value="full-time">Full-time</option>
@@ -368,26 +368,26 @@ export const TemplatesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-[#9CA3AF] mb-1">Subject * (supports variables like {'{{company}}'})</label>
+                <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Subject * (supports variables like {'{{company}}'})</label>
                 <input
                   type="text"
                   required
                   value={newTemplate.subject}
                   onChange={(e) => setNewTemplate({ ...newTemplate, subject: e.target.value })}
                   placeholder="Passionate about {{company}} · {{candidateName}}"
-                  className="w-full px-3 py-1.5 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+                  className="w-full px-3 py-1.5 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[#9CA3AF] mb-1">Body Text *</label>
+                <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Body Text *</label>
                 <textarea
                   rows={8}
                   required
                   value={newTemplate.body}
                   onChange={(e) => setNewTemplate({ ...newTemplate, body: e.target.value })}
                   placeholder="Hi {{firstName}},\n\nI’ve been following {{company}}..."
-                  className="w-full p-3 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none font-mono text-[12px] resize-none"
+                  className="w-full p-3 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none font-mono text-[12px] resize-none"
                 />
               </div>
 
@@ -395,13 +395,13 @@ export const TemplatesPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="px-4 py-2 text-[#9CA3AF] hover:text-white"
+                  className="px-4 py-2 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#00C896] text-[#0D1117] font-semibold rounded hover:bg-[#00b084]"
+                  className="px-5 py-2 bg-[#00A878] hover:bg-[#008f66] dark:bg-[#00C896] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] font-semibold rounded transition-colors"
                 >
                   Save Template
                 </button>

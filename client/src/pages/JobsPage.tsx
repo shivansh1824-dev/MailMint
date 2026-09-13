@@ -155,10 +155,10 @@ export const JobsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[28px] font-bold text-white tracking-tight font-sans">
+          <h1 className="text-[28px] font-bold text-[#17201C] dark:text-white tracking-tight font-sans">
             Saved Job Openings
           </h1>
-          <p className="text-[13px] text-[#9CA3AF]">
+          <p className="text-[13px] text-[#5E6863] dark:text-[#9CA3AF]">
             Maintain job descriptions, extract technical skill requirements, and ground email generation
           </p>
         </div>
@@ -166,15 +166,15 @@ export const JobsPage: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setLinkedInModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-[#161B22] border border-[#2D3A4A] hover:bg-[#1F2937] text-white text-[13px] font-medium rounded-[6px] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] hover:bg-[#F1F4F2] dark:hover:bg-[#1F2937] text-[#17201C] dark:text-white text-[13px] font-medium rounded-[6px] transition-colors shadow-xs"
           >
-            <Link2 className="w-4 h-4 text-[#00C896]" />
+            <Link2 className="w-4 h-4 text-[#00A878] dark:text-[#00C896]" />
             <span>Import from LinkedIn</span>
           </button>
 
           <button
             onClick={() => setCreateModalOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-[#00C896] hover:bg-[#00b084] text-[#0D1117] text-[13px] font-bold rounded-[6px] transition-colors shadow-[0_0_12px_rgba(0,200,150,0.2)]"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[#00A878] dark:bg-[#00C896] hover:bg-[#008f66] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] text-[13px] font-bold rounded-[6px] transition-colors shadow-[0_0_12px_rgba(0,200,150,0.2)]"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Add Job</span>
@@ -184,13 +184,13 @@ export const JobsPage: React.FC = () => {
 
       {/* Search */}
       <div className="relative max-w-sm">
-        <Search className="w-4 h-4 text-[#6B7280] absolute left-3 top-2.5" />
+        <Search className="w-4 h-4 text-[#87918C] dark:text-[#6B7280] absolute left-3 top-2.5" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Filter jobs by title or company..."
-          className="w-full pl-9 pr-3 py-1.5 bg-[#161B22] border border-[#2D3A4A] rounded-[6px] text-[13px] text-white placeholder-[#6B7280] focus:outline-none focus:border-[#00C896]"
+          className="w-full pl-9 pr-3 py-1.5 bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[6px] text-[13px] text-[#17201C] dark:text-white placeholder-[#87918C] dark:placeholder-[#6B7280] focus:outline-none focus:border-[#00A878] dark:focus:border-[#00C896]"
         />
       </div>
 
@@ -198,23 +198,23 @@ export const JobsPage: React.FC = () => {
       {isLoading ? (
         <TableSkeleton rows={6} cols={6} />
       ) : filtered.length === 0 ? (
-        <div className="p-16 text-center bg-[#161B22] border border-[#2D3A4A] rounded-[8px] space-y-3">
-          <Briefcase className="w-10 h-10 text-[#6B7280] mx-auto" />
-          <h3 className="text-[16px] font-semibold text-white">No jobs saved yet</h3>
-          <p className="text-[13px] text-[#9CA3AF] max-w-sm mx-auto">
+        <div className="p-16 text-center bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] space-y-3 shadow-sm">
+          <Briefcase className="w-10 h-10 text-[#87918C] dark:text-[#6B7280] mx-auto" />
+          <h3 className="text-[16px] font-semibold text-[#17201C] dark:text-white">No jobs saved yet</h3>
+          <p className="text-[13px] text-[#5E6863] dark:text-[#9CA3AF] max-w-sm mx-auto">
             Add a job description to give the AI better context for personalization.
           </p>
           <button
             onClick={() => setCreateModalOpen(true)}
-            className="px-4 py-2 bg-[#00C896] text-[#0D1117] font-semibold text-[13px] rounded-[6px] hover:bg-[#00b084]"
+            className="px-4 py-2 bg-[#00A878] dark:bg-[#00C896] text-white dark:text-[#0D1117] font-semibold text-[13px] rounded-[6px] hover:bg-[#008f66] dark:hover:bg-[#00b084]"
           >
             Add First Job
           </button>
         </div>
       ) : (
-        <div className="overflow-x-auto border border-[#2D3A4A] rounded-[8px] bg-[#161B22]">
+        <div className="overflow-x-auto border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] bg-white dark:bg-[#161B22] shadow-sm">
           <table className="w-full text-left text-[13px]">
-            <thead className="bg-[#111827] text-[#9CA3AF] border-b border-[#2D3A4A] font-medium">
+            <thead className="bg-[#F7F8F6] dark:bg-[#111827] text-[#5E6863] dark:text-[#9CA3AF] border-b border-[#DDE3DF] dark:border-[#2D3A4A] font-medium">
               <tr>
                 <th className="py-3 px-4">Role Title</th>
                 <th className="py-3 px-4">Company</th>
@@ -224,22 +224,22 @@ export const JobsPage: React.FC = () => {
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2D3A4A]/50">
+            <tbody className="divide-y divide-[#DDE3DF] dark:divide-[#2D3A4A]/50">
               {filtered.map((job) => (
-                <tr key={job.id} className="hover:bg-[#1F2937] transition-colors">
-                  <td className="py-3.5 px-4 font-semibold text-white flex items-center gap-2">
-                    <Briefcase className="w-4 h-4 text-[#00C896] flex-shrink-0" />
+                <tr key={job.id} className="hover:bg-[#F1F4F2] dark:hover:bg-[#1F2937] transition-colors">
+                  <td className="py-3.5 px-4 font-semibold text-[#17201C] dark:text-white flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-[#00A878] dark:text-[#00C896] flex-shrink-0" />
                     <span>{job.title}</span>
                   </td>
-                  <td className="py-3.5 px-4 text-[#F0F0F0]">{job.company?.name || '—'}</td>
-                  <td className="py-3.5 px-4 text-[#9CA3AF]">{job.location}</td>
-                  <td className="py-3.5 px-4 text-[#9CA3AF]">{job.employment_type}</td>
+                  <td className="py-3.5 px-4 text-[#17201C] dark:text-[#F0F0F0]">{job.company?.name || '—'}</td>
+                  <td className="py-3.5 px-4 text-[#5E6863] dark:text-[#9CA3AF]">{job.location}</td>
+                  <td className="py-3.5 px-4 text-[#5E6863] dark:text-[#9CA3AF]">{job.employment_type}</td>
                   <td className="py-3.5 px-4">
                     <div className="flex flex-wrap gap-1 max-w-xs">
                       {(job.skills || []).slice(0, 3).map((sk, idx) => (
                         <span
                           key={idx}
-                          className="px-1.5 py-0.5 rounded bg-[#111827] text-[#00C896] text-[10px] font-mono border border-[#00C896]/20"
+                          className="px-1.5 py-0.5 rounded bg-[#F1F4F2] dark:bg-[#111827] text-[#00A878] dark:text-[#00C896] text-[10px] font-mono border border-[#00A878]/20 dark:border-[#00C896]/20 font-medium"
                         >
                           {sk}
                         </span>
@@ -253,7 +253,7 @@ export const JobsPage: React.FC = () => {
                           state: { jobId: job.id, companyId: job.company_id },
                         })
                       }
-                      className="px-2.5 py-1 text-[11px] font-semibold bg-[#00C896]/15 text-[#00C896] hover:bg-[#00C896] hover:text-[#0D1117] rounded transition-colors"
+                      className="px-2.5 py-1 text-[11px] font-semibold bg-[#00A878]/15 dark:bg-[#00C896]/15 text-[#00A878] dark:text-[#00C896] hover:bg-[#00A878] dark:hover:bg-[#00C896] hover:text-white dark:hover:text-[#0D1117] rounded transition-colors"
                     >
                       Draft Email
                     </button>
@@ -268,19 +268,19 @@ export const JobsPage: React.FC = () => {
       {/* Add Job Modal with Auto-Summarize */}
       {createModalOpen && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn overflow-y-auto">
-          <div className="w-full max-w-2xl bg-[#161B22] border border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative my-8">
+          <div className="w-full max-w-2xl bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative my-8">
             <button
               onClick={() => setCreateModalOpen(false)}
-              className="absolute top-4 right-4 text-[#9CA3AF] hover:text-white"
+              className="absolute top-4 right-4 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
-            <h2 className="text-[18px] font-bold text-white mb-4">Add Target Job Posting</h2>
+            <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white mb-4">Add Target Job Posting</h2>
 
             <form onSubmit={handleCreateJob} className="space-y-4 text-[13px]">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#9CA3AF] mb-1">Target Company</label>
+                  <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1 font-medium">Target Company</label>
                   <input
                     type="text"
                     value={newJob.company_name}
@@ -295,7 +295,7 @@ export const JobsPage: React.FC = () => {
                     }}
                     placeholder="Enter company name (e.g. Stripe, Figma)"
                     list="jobs-company-datalist"
-                    className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white placeholder-[#6B7280] focus:border-[#00C896] outline-none"
+                    className="w-full px-3 py-2 bg-[#F1F4F2] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white placeholder-[#87918C] dark:placeholder-[#6B7280] focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                   />
                   <datalist id="jobs-company-datalist">
                     {companies.map((c) => (
@@ -305,35 +305,35 @@ export const JobsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[#9CA3AF] mb-1">Role Title *</label>
+                  <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1 font-medium">Role Title *</label>
                   <input
                     type="text"
                     required
                     value={newJob.title}
                     onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
                     placeholder="e.g. Software Engineer Intern"
-                    className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+                    className="w-full px-3 py-2 bg-[#F1F4F2] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#9CA3AF] mb-1">Location</label>
+                  <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1 font-medium">Location</label>
                   <input
                     type="text"
                     value={newJob.location}
                     onChange={(e) => setNewJob({ ...newJob, location: e.target.value })}
                     placeholder="San Francisco / Remote"
-                    className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+                    className="w-full px-3 py-2 bg-[#F1F4F2] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-[#9CA3AF] mb-1">Employment Type</label>
+                  <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1 font-medium">Employment Type</label>
                   <select
                     value={newJob.employment_type}
                     onChange={(e) => setNewJob({ ...newJob, employment_type: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+                    className="w-full px-3 py-2 bg-[#F1F4F2] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
                   >
                     <option value="Full-time">Full-time</option>
                     <option value="Internship">Internship</option>
@@ -345,13 +345,13 @@ export const JobsPage: React.FC = () => {
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-[#9CA3AF]">Job Description</label>
+                  <label className="text-[#5E6863] dark:text-[#9CA3AF] font-medium">Job Description</label>
                   {newJob.description.length > 300 && (
                     <button
                       type="button"
                       disabled={isSummarizing}
                       onClick={handleAutoSummarize}
-                      className="text-[11px] text-[#00C896] hover:underline font-mono flex items-center gap-1"
+                      className="text-[11px] text-[#00A878] dark:text-[#00C896] hover:underline font-mono flex items-center gap-1"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
                       {isSummarizing ? 'Analyzing...' : 'Auto-Summarize JD (>500 chars)'}
@@ -363,36 +363,36 @@ export const JobsPage: React.FC = () => {
                   value={newJob.description}
                   onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
                   placeholder="Paste complete or partial job description..."
-                  className="w-full p-3 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none resize-none font-mono text-[12px]"
+                  className="w-full p-3 bg-[#F1F4F2] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none resize-none font-mono text-[12px]"
                 />
               </div>
 
               {/* Summarized Review UI */}
               {summarizedData && (
-                <div className="p-4 bg-[#111827] border border-[#00C896]/30 rounded-[6px] space-y-3 animate-fadeIn">
-                  <div className="flex items-center gap-2 text-[#00C896] font-semibold text-[12px]">
+                <div className="p-4 bg-[#F7F8F6] dark:bg-[#111827] border border-[#00A878]/30 dark:border-[#00C896]/30 rounded-[6px] space-y-3 animate-fadeIn">
+                  <div className="flex items-center gap-2 text-[#00A878] dark:text-[#00C896] font-semibold text-[12px]">
                     <Check className="w-4 h-4" />
                     <span>Analyzed Job Intelligence Preview (Confirm Before Save)</span>
                   </div>
 
-                  <p className="text-[12px] text-[#9CA3AF] leading-relaxed">
+                  <p className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF] leading-relaxed">
                     {summarizedData.summary}
                   </p>
 
                   <div className="grid grid-cols-2 gap-2 text-[11px]">
                     <div>
-                      <span className="text-[#6B7280] block font-mono">Required Skills</span>
+                      <span className="text-[#87918C] dark:text-[#6B7280] block font-mono">Required Skills</span>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {summarizedData.requiredSkills?.map((s: string, i: number) => (
-                          <span key={i} className="px-1.5 py-0.5 rounded bg-[#161B22] text-[#00C896] border border-[#2D3A4A]">
+                          <span key={i} className="px-1.5 py-0.5 rounded bg-white dark:bg-[#161B22] text-[#00A878] dark:text-[#00C896] border border-[#DDE3DF] dark:border-[#2D3A4A] font-mono">
                             {s}
                           </span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <span className="text-[#6B7280] block font-mono">Seniority</span>
-                      <span className="text-white font-medium">{summarizedData.seniority}</span>
+                      <span className="text-[#87918C] dark:text-[#6B7280] block font-mono">Seniority</span>
+                      <span className="text-[#17201C] dark:text-white font-medium">{summarizedData.seniority}</span>
                     </div>
                   </div>
                 </div>
@@ -402,13 +402,13 @@ export const JobsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="px-4 py-2 text-[#9CA3AF] hover:text-white"
+                  className="px-4 py-2 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#00C896] text-[#0D1117] font-semibold rounded hover:bg-[#00b084]"
+                  className="px-5 py-2 bg-[#00A878] dark:bg-[#00C896] text-white dark:text-[#0D1117] font-semibold rounded hover:bg-[#008f66] dark:hover:bg-[#00b084] transition-colors shadow-sm"
                 >
                   Save Job
                 </button>
@@ -421,21 +421,21 @@ export const JobsPage: React.FC = () => {
       {/* LinkedIn Import Modal */}
       {linkedInModalOpen && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="w-full max-w-md bg-[#161B22] border border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative">
+          <div className="w-full max-w-md bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] shadow-2xl p-6 relative">
             <button
               onClick={() => setLinkedInModalOpen(false)}
-              className="absolute top-4 right-4 text-[#9CA3AF] hover:text-white"
+              className="absolute top-4 right-4 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
-            <h2 className="text-[18px] font-bold text-white mb-2">Import from LinkedIn Job</h2>
-            <p className="text-[12px] text-[#9CA3AF] mb-4">
+            <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white mb-2">Import from LinkedIn Job</h2>
+            <p className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF] mb-4">
               Paste a public LinkedIn job URL to pre-fill title and role details.
             </p>
 
             {linkedInNotice && (
-              <div className="p-3 mb-4 rounded-[6px] bg-amber-500/10 border border-amber-500/30 text-[12px] text-amber-300 flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-400" />
+              <div className="p-3 mb-4 rounded-[6px] bg-amber-500/10 border border-amber-500/30 text-[12px] text-amber-700 dark:text-amber-300 flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500 dark:text-amber-400" />
                 <span>{linkedInNotice}</span>
               </div>
             )}
@@ -447,21 +447,21 @@ export const JobsPage: React.FC = () => {
                 value={linkedInUrl}
                 onChange={(e) => setLinkedInUrl(e.target.value)}
                 placeholder="https://www.linkedin.com/jobs/view/..."
-                className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-[13px] text-white focus:border-[#00C896] outline-none"
+                className="w-full px-3 py-2 bg-[#F1F4F2] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[13px] text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
               />
 
               <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setLinkedInModalOpen(false)}
-                  className="px-4 py-2 text-[13px] text-[#9CA3AF] hover:text-white"
+                  className="px-4 py-2 text-[13px] text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={linkedInLoading}
-                  className="px-5 py-2 bg-[#00C896] text-[#0D1117] font-semibold text-[13px] rounded hover:bg-[#00b084] disabled:opacity-50"
+                  className="px-5 py-2 bg-[#00A878] dark:bg-[#00C896] text-white dark:text-[#0D1117] font-semibold text-[13px] rounded hover:bg-[#008f66] dark:hover:bg-[#00b084] disabled:opacity-50 transition-colors shadow-sm"
                 >
                   {linkedInLoading ? 'Extracting...' : 'Fetch Public Posting'}
                 </button>

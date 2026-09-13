@@ -115,6 +115,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     await extractFromActiveTab();
   });
 
+  // Helper to determine endpoints (local or production cloud)
+  async function getEndpoints() {
+    let apiBase = 'https://mailmint-ulsd.onrender.com/api';
+    let webAppBase = 'https://mail-mint-puce.vercel.app';
+
+    // Check if localhost:5000 is active for local dev
+    try {
+      const localCheck = await fetch('http://localhost:5000/api/health', { method: 'GET', signal: AbortSignal.timeout(500) });
+      if (localCheck.ok) {
+        apiBase = 'http://localhost:5000/api';
+        webAppBase = 'http://localhost:5173';
+      }
+    } catch {
+      // Fallback to production
+    }
+
+    return { apiBase, webAppBase };
+  }
+
   // Save to Contacts Pipeline
   clipForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -131,7 +150,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/contacts', {
+      const { apiBase } = await getEndpoints();
+      const res = await fetch(`${apiBase}/contacts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -157,7 +177,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const company = contactCompanyInput.value.trim();
     const title = contactTitleInput.value.trim();
 
-    const targetUrl = new URL('http://localhost:5173/email-generator');
+    const { webAppBase } = await getEndpoints();
+    const targetUrl = new URL(`${webAppBase}/email-generator`);
     if (name) targetUrl.searchParams.set('name', name);
     if (company) targetUrl.searchParams.set('company', company);
     if (title) targetUrl.searchParams.set('title', title);

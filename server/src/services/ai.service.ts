@@ -442,8 +442,19 @@ export class AiService {
     }
 
     const json: any = await response.json();
-    const content = json.content?.[0]?.text;
-    const parsed = JSON.parse(content);
+    const content = json.content?.[0]?.text || '';
+    const cleaned = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+    let parsed: any;
+    try {
+      parsed = JSON.parse(cleaned);
+    } catch {
+      const match = cleaned.match(/\{[\s\S]*\}/);
+      if (match) {
+        parsed = JSON.parse(match[0]);
+      } else {
+        throw new Error('Failed to parse AI response as JSON');
+      }
+    }
 
     const body = parsed.body || '';
     const wordCount = body.trim().split(/\s+/).filter(Boolean).length;

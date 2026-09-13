@@ -25,7 +25,9 @@
   "host_permissions": [
     "https://*.linkedin.com/*",
     "http://localhost:5000/*",
-    "http://localhost:5173/*"
+    "http://localhost:5173/*",
+    "https://mail-mint-puce.vercel.app/*",
+    "https://mailmint-ulsd.onrender.com/*"
   ],
   "content_scripts": [
     {

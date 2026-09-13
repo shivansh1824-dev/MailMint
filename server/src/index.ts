@@ -29,11 +29,16 @@ import notificationsRoutes from './routes/notifications.routes';
 
 const app = express();
 
-// Security Middlewares
+// Trust reverse proxies (Vercel, Cloudflare, Render) for accurate client IP & protocol
+app.set('trust proxy', 1);
+
+// Security Middlewares with explicit cross-origin resource access
 app.use(
   helmet({
     contentSecurityPolicy: false, // Allows cross-origin asset loads in dev
     crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginOpenerPolicy: false,
   })
 );
 
@@ -42,10 +47,14 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
   }
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  res.setHeader('Vary', 'Origin');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
@@ -79,8 +88,8 @@ app.use('/api/storage', express.static(storageDir));
 // Rate Limiting on general API routes
 app.use('/api', generalLimiter);
 
-// Health Check
-app.get('/api/health', (req, res) => {
+// Health Check (supported on both /health and /api/health for Render/Vercel/AWS probes)
+app.get(['/health', '/api/health'], (req, res) => {
   res.json({
     status: 'ok',
     name: 'MailMint API',

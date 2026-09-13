@@ -272,7 +272,7 @@ export const LandingPage: React.FC = () => {
                     </p>
                     <p className="text-[#17201C] dark:text-white font-serif">
                       Sincerely,<br />
-                      Prajjwal Rai
+                      Shivansh Rai
                     </p>
                   </div>
                 </div>

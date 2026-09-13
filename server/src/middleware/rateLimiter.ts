@@ -12,14 +12,16 @@ export const generalLimiter = rateLimit({
   },
 });
 
-// Authentication rate limit: 10 requests per 15 minutes per IP
+// Authentication rate limit: 200 requests per 15 minutes per IP
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 200,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === 'OPTIONS',
   message: {
     success: false,
     message: 'Too many authentication attempts. Please try again after 15 minutes.',
   },
 });
+

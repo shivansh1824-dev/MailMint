@@ -219,10 +219,10 @@ export const ProfilePage: React.FC = () => {
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-[28px] font-bold text-white tracking-tight font-sans">
+            <h1 className="text-[28px] font-bold text-[#17201C] dark:text-white tracking-tight font-sans">
               Candidate Profile & Voice
             </h1>
-            <p className="text-[13px] text-[#9CA3AF]">
+            <p className="text-[13px] text-[#5E6863] dark:text-[#9CA3AF]">
               All AI outreach emails are strictly grounded in your confirmed background and writing style
             </p>
           </div>
@@ -230,7 +230,7 @@ export const ProfilePage: React.FC = () => {
           <button
             onClick={handleSaveProfile}
             disabled={isSaving}
-            className="flex items-center gap-2 px-5 py-2 bg-[#00C896] hover:bg-[#00b084] text-[#0D1117] font-bold text-[13px] rounded-[6px] transition-all shadow-[0_0_12px_rgba(0,200,150,0.2)]"
+            className="flex items-center gap-2 px-5 py-2 bg-[#00A878] hover:bg-[#008f66] dark:bg-[#00C896] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] font-bold text-[13px] rounded-[6px] transition-all shadow-[0_0_12px_rgba(0,200,150,0.2)] disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             <span>{isSaving ? 'Saving...' : 'Save Profile Changes'}</span>
@@ -238,18 +238,18 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Completion Bar matching spec */}
-        <div className="p-3.5 bg-[#161B22] border border-[#2D3A4A] rounded-[8px] space-y-2">
+        <div className="p-3.5 bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] space-y-2 shadow-sm dark:shadow-none">
           <div className="flex items-center justify-between text-[12px]">
-            <span className="text-[#9CA3AF]">
-              Profile <strong className="text-[#00C896] font-mono">{completion}%</strong> complete — complete your profile for better AI personalization.
+            <span className="text-[#5E6863] dark:text-[#9CA3AF]">
+              Profile <strong className="text-[#00A878] dark:text-[#00C896] font-mono">{completion}%</strong> complete — complete your profile for better AI personalization.
             </span>
-            <span className="text-[11px] font-mono text-[#6B7280]">
+            <span className="text-[11px] font-mono text-[#8A948F] dark:text-[#6B7280]">
               {completion === 100 ? 'Fully Grounded' : 'Action Recommended'}
             </span>
           </div>
-          <div className="w-full h-1.5 bg-[#111827] rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-[#E2E8E4] dark:bg-[#111827] rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#00C896] rounded-full transition-all duration-500"
+              className="h-full bg-[#00A878] dark:bg-[#00C896] rounded-full transition-all duration-500"
               style={{ width: `${completion}%` }}
             ></div>
           </div>
@@ -257,83 +257,83 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Profile Form */}
-      <div className="bg-[#161B22] border border-[#2D3A4A] rounded-[8px] p-6 space-y-6">
-        <h2 className="text-[18px] font-bold text-white flex items-center gap-2">
-          <User className="w-4 h-4 text-[#00C896]" />
+      <div className="bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] p-6 space-y-6 shadow-sm dark:shadow-none">
+        <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white flex items-center gap-2">
+          <User className="w-4 h-4 text-[#00A878] dark:text-[#00C896]" />
           <span>Core Candidate Details</span>
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[13px]">
           <div>
-            <label className="block text-[#9CA3AF] mb-1">Full Name</label>
+            <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Full Name</label>
             <input
               type="text"
               value={profile?.full_name || ''}
               onChange={(e) => setProfile(profile ? { ...profile, full_name: e.target.value } : null)}
-              className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+              className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-[#9CA3AF] mb-1">Professional Headline</label>
+            <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Professional Headline</label>
             <input
               type="text"
               value={profile?.headline || ''}
               onChange={(e) => setProfile(profile ? { ...profile, headline: e.target.value } : null)}
               placeholder="e.g. Full-Stack Engineer & Distributed Systems Enthusiast"
-              className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+              className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-[#9CA3AF] mb-1">University / College</label>
+            <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">University / College</label>
             <input
               type="text"
               value={profile?.university || ''}
               onChange={(e) => setProfile(profile ? { ...profile, university: e.target.value } : null)}
               placeholder="Stanford University"
-              className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+              className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-[#9CA3AF] mb-1">Degree & Major</label>
+            <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Degree & Major</label>
             <input
               type="text"
               value={profile?.degree || ''}
               onChange={(e) => setProfile(profile ? { ...profile, degree: e.target.value } : null)}
               placeholder="B.S. in Computer Science"
-              className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+              className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-[#9CA3AF] mb-1">Graduation Year</label>
+            <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Graduation Year</label>
             <input
               type="number"
               value={profile?.graduation_year || 2026}
               onChange={(e) =>
                 setProfile(profile ? { ...profile, graduation_year: parseInt(e.target.value, 10) } : null)
               }
-              className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+              className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-[#9CA3AF] mb-1">Location</label>
+            <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Location</label>
             <input
               type="text"
               value={profile?.location || ''}
               onChange={(e) => setProfile(profile ? { ...profile, location: e.target.value } : null)}
               placeholder="San Francisco, CA / Remote"
-              className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none"
+              className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none"
             />
           </div>
         </div>
 
         {/* Skills Tag Input */}
         <div>
-          <label className="block text-[#9CA3AF] mb-1 text-[13px]">
+          <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1 text-[13px]">
             Primary Technical Skills (Comma-separated)
           </label>
           <input
@@ -350,26 +350,26 @@ export const ProfilePage: React.FC = () => {
               )
             }
             placeholder="React, TypeScript, Go, PostgreSQL, Docker, Kubernetes"
-            className="w-full px-3 py-2 bg-[#111827] border border-[#2D3A4A] rounded text-white focus:border-[#00C896] outline-none font-mono text-[12px]"
+            className="w-full px-3 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white focus:border-[#00A878] dark:focus:border-[#00C896] outline-none font-mono text-[12px]"
           />
         </div>
       </div>
 
       {/* Resume Version Manager Section */}
-      <div className="bg-[#161B22] border border-[#2D3A4A] rounded-[8px] p-6 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#2D3A4A]">
+      <div className="bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] p-6 space-y-6 shadow-sm dark:shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#DDE3DF] dark:border-[#2D3A4A]">
           <div>
-            <h2 className="text-[18px] font-bold text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#00C896]" />
+            <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#00A878] dark:text-[#00C896]" />
               <span>Resume Version Manager</span>
             </h2>
-            <p className="text-[12px] text-[#9CA3AF]">
+            <p className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF]">
               Upload PDF/DOCX (max 5MB). AI extracts structured skills and experience with side-by-side review.
             </p>
           </div>
 
-          <label className="px-4 py-2 bg-[#111827] border border-[#2D3A4A] hover:border-[#00C896] text-white text-[13px] font-medium rounded-[6px] cursor-pointer flex items-center gap-2 transition-colors">
-            <Upload className="w-4 h-4 text-[#00C896]" />
+          <label className="px-4 py-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] hover:border-[#00A878] dark:hover:border-[#00C896] text-[#17201C] dark:text-white text-[13px] font-medium rounded-[6px] cursor-pointer flex items-center gap-2 transition-colors">
+            <Upload className="w-4 h-4 text-[#00A878] dark:text-[#00C896]" />
             <span>{uploadLoading ? 'Extracting Resume...' : 'Upload PDF / DOCX'}</span>
             <input
               type="file"
@@ -387,42 +387,42 @@ export const ProfilePage: React.FC = () => {
               key={ver.id}
               className={`p-4 rounded-[6px] border flex flex-col justify-between space-y-3 ${
                 ver.is_default
-                  ? 'bg-[#111827] border-[#00C896]/50'
-                  : 'bg-[#111827] border-[#2D3A4A]'
+                  ? 'bg-[#F8FAF9] dark:bg-[#111827] border-[#00A878]/50 dark:border-[#00C896]/50'
+                  : 'bg-[#F8FAF9] dark:bg-[#111827] border-[#DDE3DF] dark:border-[#2D3A4A]'
               }`}
             >
               <div>
                 <div className="flex items-center justify-between gap-1 mb-1">
-                  <span className="font-semibold text-white text-[13px] truncate">
+                  <span className="font-semibold text-[#17201C] dark:text-white text-[13px] truncate">
                     {ver.name}
                   </span>
                   {ver.is_default && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#00C896]/15 text-[#00C896]">
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#00A878]/15 dark:bg-[#00C896]/15 text-[#00A878] dark:text-[#00C896]">
                       Default
                     </span>
                   )}
                 </div>
-                <span className="text-[11px] text-[#6B7280] font-mono">
+                <span className="text-[11px] text-[#5E6863] dark:text-[#6B7280] font-mono">
                   {new Date(ver.created_at).toLocaleDateString()}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-[#2D3A4A] text-[12px]">
+              <div className="flex items-center justify-between pt-2 border-t border-[#DDE3DF] dark:border-[#2D3A4A] text-[12px]">
                 {!ver.is_default ? (
                   <button
                     onClick={() => handleSetDefaultResume(ver.id)}
-                    className="text-[#9CA3AF] hover:text-[#00C896] text-[11px]"
+                    className="text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#00A878] dark:hover:text-[#00C896] text-[11px]"
                   >
                     Set as Default
                   </button>
                 ) : (
-                  <span className="text-[11px] text-[#00C896] flex items-center gap-1">
+                  <span className="text-[11px] text-[#00A878] dark:text-[#00C896] flex items-center gap-1">
                     <Check className="w-3 h-3" /> Active Default
                   </span>
                 )}
                 <button
                   onClick={() => handleDeleteResumeVersion(ver.id)}
-                  className="text-red-400 hover:text-red-300 p-1 rounded"
+                  className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 p-1 rounded"
                   title="Delete version"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -432,7 +432,7 @@ export const ProfilePage: React.FC = () => {
           ))}
 
           {resumeVersions.length === 0 && (
-            <div className="col-span-full py-8 text-center text-[13px] text-[#6B7280]">
+            <div className="col-span-full py-8 text-center text-[13px] text-[#5E6863] dark:text-[#6B7280]">
               No resume versions uploaded yet. Upload your master resume to ground email personalization.
             </div>
           )}
@@ -440,17 +440,17 @@ export const ProfilePage: React.FC = () => {
 
         {/* Side-by-Side Review Interface after Extraction */}
         {extractedReview && (
-          <div className="p-5 bg-[#111827] border border-[#00C896]/40 rounded-[8px] space-y-4 animate-fadeIn">
+          <div className="p-5 bg-[#F8FAF9] dark:bg-[#111827] border border-[#00A878]/40 dark:border-[#00C896]/40 rounded-[8px] space-y-4 animate-fadeIn">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[12px] font-mono uppercase text-[#00C896] block">
+                <span className="text-[12px] font-mono uppercase text-[#00A878] dark:text-[#00C896] block">
                   AI Structured Resume Extractor
                 </span>
-                <h3 className="text-[16px] font-bold text-white">Review & Confirm Extracted Data</h3>
+                <h3 className="text-[16px] font-bold text-[#17201C] dark:text-white">Review & Confirm Extracted Data</h3>
               </div>
               <button
                 onClick={() => setExtractedReview(null)}
-                className="text-[#9CA3AF] hover:text-white"
+                className="text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -459,20 +459,20 @@ export const ProfilePage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Left: Raw Extracted Text */}
               <div className="space-y-1">
-                <span className="text-[11px] font-mono uppercase text-[#9CA3AF]">
+                <span className="text-[11px] font-mono uppercase text-[#5E6863] dark:text-[#9CA3AF]">
                   Raw Extracted Text
                 </span>
                 <textarea
                   rows={10}
                   readOnly
                   value={extractedReview.rawText}
-                  className="w-full p-3 bg-[#161B22] border border-[#2D3A4A] rounded text-[11px] text-[#9CA3AF] font-mono outline-none resize-none leading-relaxed"
+                  className="w-full p-3 bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[11px] text-[#5E6863] dark:text-[#9CA3AF] font-mono outline-none resize-none leading-relaxed"
                 />
               </div>
 
               {/* Right: Structured Preview & Edit */}
               <div className="space-y-1">
-                <span className="text-[11px] font-mono uppercase text-[#00C896]">
+                <span className="text-[11px] font-mono uppercase text-[#00A878] dark:text-[#00C896]">
                   Structured Preview (Editable)
                 </span>
                 <textarea
@@ -488,19 +488,19 @@ export const ProfilePage: React.FC = () => {
                       // ignore typing errors
                     }
                   }}
-                  className="w-full p-3 bg-[#161B22] border border-[#00C896]/30 rounded text-[11px] text-white font-mono outline-none resize-none leading-relaxed"
+                  className="w-full p-3 bg-white dark:bg-[#161B22] border border-[#00A878]/30 dark:border-[#00C896]/30 rounded text-[11px] text-[#17201C] dark:text-white font-mono outline-none resize-none leading-relaxed"
                 />
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#2D3A4A]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#DDE3DF] dark:border-[#2D3A4A]">
               <div className="flex items-center gap-2">
-                <label className="text-[12px] text-[#9CA3AF]">Version Name:</label>
+                <label className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF]">Version Name:</label>
                 <input
                   type="text"
                   value={versionNameInput}
                   onChange={(e) => setVersionNameInput(e.target.value)}
-                  className="px-3 py-1 bg-[#161B22] border border-[#2D3A4A] rounded text-[12px] text-white outline-none"
+                  className="px-3 py-1 bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[12px] text-[#17201C] dark:text-white outline-none"
                 />
               </div>
 
@@ -508,14 +508,14 @@ export const ProfilePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setExtractedReview(null)}
-                  className="px-4 py-1.5 text-[12px] text-[#9CA3AF] hover:text-white"
+                  className="px-4 py-1.5 text-[12px] text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white"
                 >
                   Discard
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveResumeVersion}
-                  className="px-5 py-1.5 bg-[#00C896] text-[#0D1117] font-bold text-[12px] rounded hover:bg-[#00b084]"
+                  className="px-5 py-1.5 bg-[#00A878] hover:bg-[#008f66] dark:bg-[#00C896] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] font-bold text-[12px] rounded transition-colors"
                 >
                   Confirm & Save Version
                 </button>
@@ -526,21 +526,21 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Ghostwriter Mode: Train Your Voice */}
-      <div className="bg-[#161B22] border border-[#2D3A4A] rounded-[8px] p-6 space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#2D3A4A]">
+      <div className="bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] p-6 space-y-4 shadow-sm dark:shadow-none">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DDE3DF] dark:border-[#2D3A4A]">
           <div>
-            <h2 className="text-[18px] font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#00C896]" />
+            <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#00A878] dark:text-[#00C896]" />
               <span>Ghostwriter Mode: Train Your Writing Voice</span>
             </h2>
-            <p className="text-[12px] text-[#9CA3AF]">
+            <p className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF]">
               Provide 3–5 sample emails you have previously written. MailMint extracts your average sentence length, formality, and cadence.
             </p>
           </div>
           {profile?.voice_profile && (
             <button
               onClick={handleClearVoice}
-              className="text-[11px] text-red-400 hover:underline"
+              className="text-[11px] text-red-500 dark:text-red-400 hover:underline"
             >
               Clear Voice Profile
             </button>
@@ -548,12 +548,12 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {profile?.voice_profile ? (
-          <div className="p-4 bg-[#111827] border border-[#00C896]/30 rounded-[6px] space-y-2">
-            <div className="flex items-center gap-2 text-[#00C896] font-semibold text-[13px]">
+          <div className="p-4 bg-[#F8FAF9] dark:bg-[#111827] border border-[#00A878]/30 dark:border-[#00C896]/30 rounded-[6px] space-y-2">
+            <div className="flex items-center gap-2 text-[#00A878] dark:text-[#00C896] font-semibold text-[13px]">
               <CheckCircle2 className="w-4 h-4" />
               <span>Voice Profile Active</span>
             </div>
-            <p className="text-[13px] text-white leading-relaxed font-mono text-[12px]">
+            <p className="text-[13px] text-[#17201C] dark:text-white leading-relaxed font-mono text-[12px]">
               {profile.voice_profile}
             </p>
           </div>
@@ -569,12 +569,12 @@ export const ProfilePage: React.FC = () => {
                     next[i] = e.target.value;
                     setSamples(next);
                   }}
-                  className="flex-1 p-2 bg-[#111827] border border-[#2D3A4A] rounded text-[12px] text-white outline-none resize-none font-serif"
+                  className="flex-1 p-2 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[12px] text-[#17201C] dark:text-white outline-none resize-none font-serif"
                 />
                 {samples.length > 1 && (
                   <button
                     onClick={() => setSamples(samples.filter((_, idx) => idx !== i))}
-                    className="p-2 text-[#6B7280] hover:text-red-400"
+                    className="p-2 text-[#8A948F] dark:text-[#6B7280] hover:text-red-500"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -586,7 +586,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSamples([...samples, ''])}
-                className="text-[12px] text-[#00C896] hover:underline flex items-center gap-1"
+                className="text-[12px] text-[#00A878] dark:text-[#00C896] hover:underline flex items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Email Sample
               </button>
@@ -595,7 +595,7 @@ export const ProfilePage: React.FC = () => {
                 type="button"
                 disabled={isAnalyzingVoice}
                 onClick={handleAnalyzeWritingStyle}
-                className="px-5 py-2 bg-[#00C896] text-[#0D1117] font-bold text-[13px] rounded hover:bg-[#00b084] disabled:opacity-50 flex items-center gap-1.5"
+                className="px-5 py-2 bg-[#00A878] hover:bg-[#008f66] dark:bg-[#00C896] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] font-bold text-[13px] rounded disabled:opacity-50 flex items-center gap-1.5 transition-colors"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>{isAnalyzingVoice ? 'Analyzing Voice...' : 'Analyze My Writing Style'}</span>
@@ -606,8 +606,8 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Email Signature Builder */}
-      <div className="bg-[#161B22] border border-[#2D3A4A] rounded-[8px] p-6 space-y-4">
-        <h2 className="text-[18px] font-bold text-white flex items-center gap-2 pb-3 border-b border-[#2D3A4A]">
+      <div className="bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] p-6 space-y-4 shadow-sm dark:shadow-none">
+        <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white flex items-center gap-2 pb-3 border-b border-[#DDE3DF] dark:border-[#2D3A4A]">
           <span>Professional Email Signature</span>
         </h2>
 
@@ -615,7 +615,7 @@ export const ProfilePage: React.FC = () => {
           {/* Controls */}
           <div className="space-y-3 text-[12px]">
             <div>
-              <label className="block text-[#9CA3AF] mb-1">Layout</label>
+              <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Layout</label>
               <div className="grid grid-cols-3 gap-2">
                 {(['minimal', 'standard', 'card'] as const).map((lay) => (
                   <button
@@ -632,8 +632,8 @@ export const ProfilePage: React.FC = () => {
                     }}
                     className={`py-1.5 capitalize rounded border transition-colors ${
                       sigLayout === lay
-                        ? 'bg-[#00C896] text-[#0D1117] font-bold border-[#00C896]'
-                        : 'bg-[#111827] text-[#9CA3AF] border-[#2D3A4A]'
+                        ? 'bg-[#00A878] dark:bg-[#00C896] text-white dark:text-[#0D1117] font-bold border-[#00A878] dark:border-[#00C896]'
+                        : 'bg-[#F8FAF9] dark:bg-[#111827] text-[#5E6863] dark:text-[#9CA3AF] border-[#DDE3DF] dark:border-[#2D3A4A]'
                     }`}
                   >
                     {lay}
@@ -643,7 +643,7 @@ export const ProfilePage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-[#9CA3AF] mb-1">Professional Title</label>
+              <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">Professional Title</label>
               <input
                 type="text"
                 value={profile?.email_signature?.title || ''}
@@ -657,12 +657,12 @@ export const ProfilePage: React.FC = () => {
                       : null
                   )
                 }
-                className="w-full px-3 py-1.5 bg-[#111827] border border-[#2D3A4A] rounded text-white outline-none"
+                className="w-full px-3 py-1.5 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-[#9CA3AF] mb-1">LinkedIn Profile</label>
+              <label className="block text-[#5E6863] dark:text-[#9CA3AF] mb-1">LinkedIn Profile</label>
               <input
                 type="text"
                 value={profile?.email_signature?.linkedin || ''}
@@ -676,22 +676,22 @@ export const ProfilePage: React.FC = () => {
                       : null
                   )
                 }
-                className="w-full px-3 py-1.5 bg-[#111827] border border-[#2D3A4A] rounded text-white outline-none"
+                className="w-full px-3 py-1.5 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded text-[#17201C] dark:text-white outline-none"
               />
             </div>
           </div>
 
           {/* Live Lora Serif Preview */}
-          <div className="p-4 bg-[#111827] border border-[#2D3A4A] rounded-[8px] flex flex-col justify-center font-serif text-[14px] text-[#F0F0F0] leading-relaxed">
-            <span className="text-[11px] font-mono uppercase text-[#6B7280] mb-3 block">
+          <div className="p-4 bg-[#F8FAF9] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] flex flex-col justify-center font-serif text-[14px] text-[#17201C] dark:text-[#F0F0F0] leading-relaxed">
+            <span className="text-[11px] font-mono uppercase text-[#8A948F] dark:text-[#6B7280] mb-3 block">
               Live Preview (Lora Serif)
             </span>
-            <div className="border-t border-[#2D3A4A] pt-3">
-              <div className="font-bold text-white">{profile?.full_name || 'Your Name'}</div>
-              <div className="text-[#9CA3AF]">
+            <div className="border-t border-[#DDE3DF] dark:border-[#2D3A4A] pt-3">
+              <div className="font-bold text-[#17201C] dark:text-white">{profile?.full_name || 'Your Name'}</div>
+              <div className="text-[#5E6863] dark:text-[#9CA3AF]">
                 {profile?.email_signature?.title || profile?.headline || 'Software Engineer'}
               </div>
-              <div className="text-[12px] text-[#6B7280] mt-1 font-mono">
+              <div className="text-[12px] text-[#8A948F] dark:text-[#6B7280] mt-1 font-mono">
                 {profile?.email} {profile?.email_signature?.linkedin ? `· ${profile.email_signature.linkedin}` : ''}
               </div>
             </div>

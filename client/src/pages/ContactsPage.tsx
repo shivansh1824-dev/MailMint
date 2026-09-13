@@ -21,6 +21,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { api } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 import { Contact, ContactTimelineItem, Email } from '../types';
 import { StatusBadge } from '../components/common/Badge';
 import { TableSkeleton } from '../components/common/Skeleton';
@@ -31,6 +32,7 @@ import { CompanyLogo } from '../components/common/CompanyLogo';
 import { EmptyState } from '../components/common/EmptyState';
 
 export const ContactsPage: React.FC = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -135,7 +137,7 @@ export const ContactsPage: React.FC = () => {
         contactName: drawerContact.name,
         company: drawerContact.company || 'your company',
         roleTitle: drawerContact.job_title || 'Software Engineering',
-        candidateName: 'Candidate',
+        candidateName: user?.name || 'Shivansh Rai',
       });
       if (res.success) {
         setLinkedInMsg(res.message);

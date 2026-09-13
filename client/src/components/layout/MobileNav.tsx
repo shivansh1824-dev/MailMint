@@ -12,7 +12,7 @@ export const MobileNav: React.FC = () => {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#0D1117] border-t border-[#2D3A4A] flex items-center justify-around z-40 px-2">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-[#0D1117] border-t border-[#DDE3DF] dark:border-[#2D3A4A] flex items-center justify-around z-40 px-2 transition-colors">
       {items.map((item) => {
         const Icon = item.icon;
         return (
@@ -21,7 +21,7 @@ export const MobileNav: React.FC = () => {
             to={item.to}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[11px] font-medium transition-colors ${
-                isActive ? 'text-[#00C896]' : 'text-[#9CA3AF]'
+                isActive ? 'text-[#00A878] dark:text-[#00C896]' : 'text-[#5E6863] dark:text-[#9CA3AF]'
               }`
             }
           >

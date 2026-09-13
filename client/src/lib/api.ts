@@ -1,6 +1,14 @@
-let rawBase = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
-if (rawBase.startsWith('http') && !rawBase.endsWith('/api')) {
-  rawBase = `${rawBase}/api`;
+// Smart API_BASE resolution:
+// When deployed on Vercel or localhost, relative '/api' uses Vite or Vercel reverse proxy rewrites,
+// which eliminates cross-origin CORS preflight and cookie restrictions.
+let rawBase = '/api';
+if (typeof window !== 'undefined' && window.location.hostname.endsWith('vercel.app')) {
+  rawBase = '/api';
+} else if (import.meta.env.VITE_API_URL) {
+  rawBase = import.meta.env.VITE_API_URL.replace(/\/$/, '');
+  if (rawBase.startsWith('http') && !rawBase.endsWith('/api')) {
+    rawBase = `${rawBase}/api`;
+  }
 }
 const API_BASE = rawBase;
 
@@ -30,12 +38,21 @@ export async function apiRequest<T = any>(
 
   const url = `${API_BASE}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 
-  let response = await fetch(url, {
-    ...rest,
-    headers: reqHeaders,
-    body: isFormData ? data : data !== undefined ? JSON.stringify(data) : undefined,
-    credentials: 'include', // Includes httpOnly cookies
-  });
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...rest,
+      headers: reqHeaders,
+      body: isFormData ? data : data !== undefined ? JSON.stringify(data) : undefined,
+      credentials: 'include', // Includes httpOnly cookies
+    });
+  } catch (err: any) {
+    // Helpful diagnostic if Render free tier is cold booting
+    if (err?.message?.includes('Failed to fetch') || err?.name === 'TypeError') {
+      throw new Error('Connecting to server... (If backend was sleeping, please wait 15-30s and try again)');
+    }
+    throw err;
+  }
 
   // Handle automatic token refresh on 401
   if (response.status === 401 && !endpoint.includes('/auth/login') && !endpoint.includes('/auth/refresh-token')) {

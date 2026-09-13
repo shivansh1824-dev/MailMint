@@ -78,17 +78,17 @@ export const DashboardPage: React.FC = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[28px] sm:text-[32px] font-bold text-white tracking-tight font-sans">
+          <h1 className="text-[28px] sm:text-[32px] font-bold text-[#17201C] dark:text-white tracking-tight font-sans">
             Outreach Pipeline
           </h1>
-          <p className="text-[13px] text-[#9CA3AF]">
+          <p className="text-[13px] text-[#5E6863] dark:text-[#9CA3AF]">
             Overview of your active recruiter emails, responses, and pending review checkpoints
           </p>
         </div>
 
         <Link
           to="/email-generator"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#00C896] text-[#0D1117] font-semibold text-[13px] rounded-[6px] hover:bg-[#00b084] transition-all shadow-[0_0_12px_rgba(0,200,150,0.2)]"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#00A878] dark:bg-[#00C896] text-white dark:text-[#0D1117] font-semibold text-[13px] rounded-[6px] hover:bg-[#008f66] dark:hover:bg-[#00b084] transition-all shadow-[0_0_12px_rgba(0,200,150,0.2)]"
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>New Outreach</span>
@@ -97,21 +97,21 @@ export const DashboardPage: React.FC = () => {
 
       {/* Follow-ups Due Action Banner */}
       {followupsDue.length > 0 && (
-        <div className="p-4 rounded-[8px] bg-[#161B22] border-l-4 border-amber-500 border-t border-r border-b border-[#2D3A4A] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-4 rounded-[8px] bg-white dark:bg-[#161B22] border-l-4 border-amber-500 border-t border-r border-b border-[#DDE3DF] dark:border-[#2D3A4A] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-3">
-            <Clock className="w-5 h-5 text-amber-400 flex-shrink-0" />
+            <Clock className="w-5 h-5 text-amber-500 dark:text-amber-400 flex-shrink-0" />
             <div>
-              <h4 className="text-[14px] font-semibold text-white">
+              <h4 className="text-[14px] font-semibold text-[#17201C] dark:text-white">
                 {followupsDue.length} follow-up email{followupsDue.length > 1 ? 's' : ''} awaiting approval
               </h4>
-              <p className="text-[12px] text-[#9CA3AF]">
+              <p className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF]">
                 Review and approve outreach cadences before delivery. MailMint never auto-sends without confirmation.
               </p>
             </div>
           </div>
           <Link
             to="/campaigns"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-[12px] font-medium transition-colors whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-amber-500/15 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 hover:bg-amber-500/25 dark:hover:bg-amber-500/30 text-[12px] font-medium transition-colors whitespace-nowrap"
           >
             <span>Review Follow-ups</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -127,19 +127,19 @@ export const DashboardPage: React.FC = () => {
             <Link
               key={idx}
               to={card.to}
-              className={`p-5 rounded-[8px] bg-[#161B22] border border-[#2D3A4A] hover:bg-[#1F2937] transition-all flex flex-col justify-between group ${
+              className={`p-5 rounded-[8px] bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] hover:bg-[#F1F4F2] dark:hover:bg-[#1F2937] transition-all flex flex-col justify-between group shadow-sm ${
                 card.highlight ? 'ring-1 ring-amber-500/40' : ''
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[12px] text-[#9CA3AF] font-medium tracking-wide">
+                <span className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF] font-medium tracking-wide">
                   {card.label}
                 </span>
-                <Icon className="w-4 h-4 text-[#6B7280] group-hover:text-[#00C896] transition-colors" />
+                <Icon className="w-4 h-4 text-[#87918C] dark:text-[#6B7280] group-hover:text-[#00A878] dark:group-hover:text-[#00C896] transition-colors" />
               </div>
 
               <div className="flex items-end justify-between mt-1">
-                <span className="text-[26px] font-bold text-white tracking-tight">
+                <span className="text-[26px] font-bold text-[#17201C] dark:text-white tracking-tight">
                   {card.value}
                 </span>
 
@@ -169,17 +169,17 @@ export const DashboardPage: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-[18px] font-bold text-white font-sans">
+            <h2 className="text-[18px] font-bold text-[#17201C] dark:text-white font-sans">
               Recent Outreach
             </h2>
-            <p className="text-[12px] text-[#9CA3AF]">
+            <p className="text-[12px] text-[#5E6863] dark:text-[#9CA3AF]">
               Latest personalized emails drafted and dispatched from your inbox
             </p>
           </div>
 
           <Link
             to="/email-generator"
-            className="text-[12px] text-[#00C896] hover:underline font-medium flex items-center gap-1"
+            className="text-[12px] text-[#00A878] dark:text-[#00C896] hover:underline font-medium flex items-center gap-1"
           >
             <span>View all in generator</span>
             <ArrowRight className="w-3 h-3" />
@@ -187,25 +187,25 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {recentEmails.length === 0 ? (
-          <div className="p-12 text-center bg-[#161B22] border border-[#2D3A4A] rounded-[8px] space-y-3">
-            <div className="w-10 h-10 rounded-full bg-[#1F2937] text-[#00C896] flex items-center justify-center mx-auto">
+          <div className="p-12 text-center bg-white dark:bg-[#161B22] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] space-y-3 shadow-sm">
+            <div className="w-10 h-10 rounded-full bg-[#F1F4F2] dark:bg-[#1F2937] text-[#00A878] dark:text-[#00C896] flex items-center justify-center mx-auto">
               <FileText className="w-5 h-5" />
             </div>
-            <h3 className="text-[16px] font-semibold text-white">No outreach drafted yet</h3>
-            <p className="text-[13px] text-[#9CA3AF] max-w-sm mx-auto">
+            <h3 className="text-[16px] font-semibold text-[#17201C] dark:text-white">No outreach drafted yet</h3>
+            <p className="text-[13px] text-[#5E6863] dark:text-[#9CA3AF] max-w-sm mx-auto">
               Create your first AI-personalized recruiter email based on your confirmed skills and target company.
             </p>
             <Link
               to="/email-generator"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#00C896] text-[#0D1117] text-[13px] font-bold rounded-[6px] hover:bg-[#00b084]"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#00A878] dark:bg-[#00C896] text-white dark:text-[#0D1117] text-[13px] font-bold rounded-[6px] hover:bg-[#008f66] dark:hover:bg-[#00b084]"
             >
               <Plus className="w-4 h-4" /> Draft First Outreach
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto border border-[#2D3A4A] rounded-[8px] bg-[#161B22]">
+          <div className="overflow-x-auto border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[8px] bg-white dark:bg-[#161B22] shadow-sm">
             <table className="w-full text-left text-[13px]">
-              <thead className="bg-[#111827] text-[#9CA3AF] border-b border-[#2D3A4A] font-medium">
+              <thead className="bg-[#F7F8F6] dark:bg-[#111827] text-[#5E6863] dark:text-[#9CA3AF] border-b border-[#DDE3DF] dark:border-[#2D3A4A] font-medium">
                 <tr>
                   <th className="py-3 px-4">Company</th>
                   <th className="py-3 px-4">Contact</th>
@@ -214,7 +214,7 @@ export const DashboardPage: React.FC = () => {
                   <th className="py-3 px-4 text-right">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2D3A4A]/60">
+              <tbody className="divide-y divide-[#DDE3DF] dark:divide-[#2D3A4A]/60">
                 {recentEmails.map((email) => {
                   const companyName = email.contact?.company || email.job?.company?.name || 'Target Team';
                   const contactName = email.contact?.name || 'Hiring Lead';
@@ -222,24 +222,24 @@ export const DashboardPage: React.FC = () => {
                     <tr
                       key={email.id}
                       onClick={() => navigate('/email-generator', { state: { emailId: email.id } })}
-                      className="hover:bg-[#1F2937] cursor-pointer transition-colors"
+                      className="hover:bg-[#F1F4F2] dark:hover:bg-[#1F2937] cursor-pointer transition-colors"
                     >
-                      <td className="py-3.5 px-4 font-medium text-white">
+                      <td className="py-3.5 px-4 font-medium text-[#17201C] dark:text-white">
                         {companyName}
                       </td>
-                      <td className="py-3.5 px-4 text-[#F0F0F0]">
+                      <td className="py-3.5 px-4 text-[#17201C] dark:text-[#F0F0F0]">
                         {contactName}
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="flex flex-col">
-                          <span className="text-white truncate max-w-xs">{email.subject}</span>
-                          <span className="text-[11px] text-[#6B7280] font-mono">{email.type}</span>
+                          <span className="text-[#17201C] dark:text-white truncate max-w-xs">{email.subject}</span>
+                          <span className="text-[11px] text-[#87918C] dark:text-[#6B7280] font-mono">{email.type}</span>
                         </div>
                       </td>
                       <td className="py-3.5 px-4">
                         <StatusBadge status={email.status} />
                       </td>
-                      <td className="py-3.5 px-4 text-right text-[#9CA3AF] text-[12px] font-mono">
+                      <td className="py-3.5 px-4 text-right text-[#5E6863] dark:text-[#9CA3AF] text-[12px] font-mono">
                         {new Date(email.updated_at || email.created_at).toLocaleDateString()}
                       </td>
                     </tr>

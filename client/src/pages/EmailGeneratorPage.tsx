@@ -143,23 +143,38 @@ export const EmailGeneratorPage: React.FC = () => {
     loadContext();
   }, [navState, searchParams]);
 
-  // Trigger score update when body or subject changes
+  // Trigger score update when body or subject changes (debounced by 600ms)
   useEffect(() => {
-    if (body && body.trim().length > 20) {
+    if (!body || body.trim().length <= 20) {
+      setScoreData(null);
+      return;
+    }
+
+    const timer = setTimeout(() => {
       const selectedComp = targetCompanyInput || companies.find((c) => c.id === selectedCompanyId)?.name;
       api.post('/ai/score-email', { subject, body, company: selectedComp }).then((res) => {
         if (res.success) setScoreData(res.score);
+      }).catch((err) => {
+        console.error('Scoring error:', err);
       });
-    }
-  }, [body, subject, selectedCompanyId, targetCompanyInput]);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [body, subject, selectedCompanyId, targetCompanyInput, companies]);
 
   const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
   const targetWords =
     length === 'Ultra-Short' ? 50 : length === 'Short' ? 100 : length === 'Standard' ? 150 : 200;
   const isOverLength = wordCount > targetWords + 20;
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (overrides?: {
+    tone?: 'Casual' | 'Warm' | 'Balanced' | 'Professional' | 'Formal';
+    length?: 'Ultra-Short' | 'Short' | 'Standard' | 'Detailed';
+  }) => {
     setIsGenerating(true);
+    const activeTone = overrides?.tone ?? tone;
+    const activeLength = overrides?.length ?? length;
+
     try {
       const res = await api.post('/ai/generate-email', {
         resumeVersionId: selectedResumeId || undefined,
@@ -168,8 +183,8 @@ export const EmailGeneratorPage: React.FC = () => {
         contactId: selectedContactId || undefined,
         jobId: selectedJobId || undefined,
         personalNote: personalNote || undefined,
-        tone,
-        length,
+        tone: activeTone,
+        length: activeLength,
         language,
         type: emailType,
         referralRelation: emailType === 'referral' ? referralRelation : undefined,
@@ -200,14 +215,14 @@ export const EmailGeneratorPage: React.FC = () => {
       }
     } else if (tweak === 'professional') {
       setTone('Professional');
-      handleGenerate();
+      handleGenerate({ tone: 'Professional' });
     } else if (tweak === 'warmer') {
       setTone('Warm');
-      handleGenerate();
+      handleGenerate({ tone: 'Warm' });
     } else if (tweak === 'direct') {
       setTone('Casual');
       setLength('Short');
-      handleGenerate();
+      handleGenerate({ tone: 'Casual', length: 'Short' });
     }
   };
 
@@ -622,7 +637,7 @@ export const EmailGeneratorPage: React.FC = () => {
           <button
             type="button"
             disabled={isGenerating}
-            onClick={handleGenerate}
+            onClick={() => handleGenerate()}
             className="w-full py-3 bg-[#00A878] hover:bg-[#008f66] dark:bg-[#00C896] dark:hover:bg-[#00b084] text-white dark:text-[#0D1117] font-bold text-[14px] font-sans rounded-[6px] disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(0,168,120,0.25)] dark:shadow-[0_0_16px_rgba(0,200,150,0.25)]"
           >
             {isGenerating ? (
@@ -712,7 +727,7 @@ export const EmailGeneratorPage: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={handleGenerate}
+                  onClick={() => handleGenerate()}
                   disabled={isGenerating}
                   className="p-1.5 text-[#5E6863] dark:text-[#9CA3AF] hover:text-[#17201C] dark:hover:text-white hover:bg-[#F0F4F1] dark:hover:bg-[#1F2937] rounded transition-colors"
                   title="Regenerate"
