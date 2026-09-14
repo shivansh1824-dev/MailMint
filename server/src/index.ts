@@ -104,6 +104,7 @@ app.get(['/health', '/api/health'], (req, res) => {
     status: 'ok',
     name: 'MailMint API',
     tagline: 'Fresh outreach. Real connections.',
+    version: '1.0.1-resend',
     timestamp: new Date().toISOString(),
     env: ENV.NODE_ENV,
   });
