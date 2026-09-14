@@ -123,7 +123,15 @@ export const EmailGeneratorPage: React.FC = () => {
         }
 
         if (navState?.jobId) setSelectedJobId(navState.jobId);
-        if (navState?.contactId) setSelectedContactId(navState.contactId);
+        if (navState?.contactId) {
+          setSelectedContactId(navState.contactId);
+          const matchedContact = contRes.contacts?.find((c: any) => c.id === navState.contactId);
+          if (matchedContact && matchedContact.company) {
+            setTargetCompanyInput(matchedContact.company);
+            const foundComp = compRes.companies?.find((c: any) => c.name.toLowerCase() === matchedContact.company.toLowerCase());
+            if (foundComp) setSelectedCompanyId(foundComp.id);
+          }
+        }
         if (navState?.emailId) {
           setCurrentEmailId(navState.emailId);
           api.get(`/emails/${navState.emailId}`).then((eRes) => {
@@ -262,10 +270,12 @@ export const EmailGeneratorPage: React.FC = () => {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
-  const handleConfirmSend = async (includeSignature: boolean) => {
+  const handleConfirmSend = async (includeSignature: boolean, manualRecipient?: string) => {
     setIsSending(true);
     try {
-      // Ensure draft exists
+      const selectedContact = contacts.find((c) => c.id === selectedContactId);
+      const activeRecipient = manualRecipient || selectedContact?.email || '';
+
       let emailIdToSend = currentEmailId;
       if (!emailIdToSend) {
         const createRes = await api.post('/emails', {
@@ -275,12 +285,27 @@ export const EmailGeneratorPage: React.FC = () => {
           job_id: selectedJobId || null,
           type: emailType,
         });
-        if (createRes.success) emailIdToSend = createRes.email.id;
+        if (createRes.success) {
+          emailIdToSend = createRes.email.id;
+          setCurrentEmailId(createRes.email.id);
+        }
+      } else {
+        // Sync draft content with backend
+        await api.put(`/emails/${emailIdToSend}`, {
+          subject,
+          body,
+          contact_id: selectedContactId || null,
+          job_id: selectedJobId || null,
+          type: emailType,
+        });
       }
 
       const sendRes = await api.post(`/emails/${emailIdToSend}/send`, {
         manualConfirmation: true,
         includeSignature,
+        recipientEmail: activeRecipient,
+        subject,
+        body,
       });
 
       if (sendRes.success) {
@@ -486,13 +511,23 @@ export const EmailGeneratorPage: React.FC = () => {
               </label>
               <select
                 value={selectedContactId}
-                onChange={(e) => setSelectedContactId(e.target.value)}
+                onChange={(e) => {
+                  const cid = e.target.value;
+                  setSelectedContactId(cid);
+                  const matched = contacts.find((c) => c.id === cid);
+                  if (matched && matched.company) {
+                    setTargetCompanyInput(matched.company);
+                    const compName = matched.company.toLowerCase();
+                    const foundComp = companies.find((c) => c.name.toLowerCase() === compName);
+                    if (foundComp) setSelectedCompanyId(foundComp.id);
+                  }
+                }}
                 className="w-full px-2.5 py-1.5 bg-[#F7F8F6] dark:bg-[#111827] border border-[#DDE3DF] dark:border-[#2D3A4A] rounded-[6px] text-[13px] text-[#17201C] dark:text-white focus:outline-none focus:border-[#00A878] dark:focus:border-[#00C896]"
               >
                 <option value="">-- Select Contact --</option>
                 {contacts.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.name} {c.job_title ? `(${c.job_title})` : ''}
+                    {c.name} {c.job_title ? `(${c.job_title})` : ''} {c.company ? `@ ${c.company}` : ''}
                   </option>
                 ))}
               </select>

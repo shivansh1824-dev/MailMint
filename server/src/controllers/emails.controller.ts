@@ -109,7 +109,7 @@ export class EmailsController {
     try {
       const userId = req.user!.userId;
       const { id } = req.params;
-      const { includeSignature = true, manualConfirmation = false } = req.body;
+      const { includeSignature = true, manualConfirmation = false, subject: overrideSubject, body: overrideBody, recipientEmail: overrideRecipient } = req.body;
 
       if (!manualConfirmation) {
         return res.status(400).json({
@@ -127,21 +127,30 @@ export class EmailsController {
       if (!user?.gmail_connected) {
         return res.status(400).json({
           success: false,
-          message: 'Gmail is not connected. Please connect your Gmail account in Settings first.',
+          message: 'Gmail is not connected. Please connect your Gmail account in Settings or use Google App Password.',
         });
       }
 
       const contact = email.contact_id ? await DbService.findById('contacts', email.contact_id, userId) : null;
-      const toEmail = contact?.email || req.body.recipientEmail;
+      const toEmail = (overrideRecipient || contact?.email || '').trim();
 
       if (!toEmail) {
         return res.status(400).json({
           success: false,
-          message: 'Recipient email address is missing. Please add an email to the contact.',
+          message: 'Recipient email address is missing. Please provide a recipient email address.',
         });
       }
 
-      let finalBody = email.body || '';
+      // Update email record if overrides were provided
+      if (overrideSubject || overrideBody) {
+        await DbService.update('emails', { id, user_id: userId }, {
+          subject: overrideSubject || email.subject,
+          body: overrideBody || email.body,
+        });
+      }
+
+      const activeSubject = overrideSubject || email.subject || 'Outreach';
+      let finalBody = overrideBody || email.body || '';
 
       // Append signature if enabled
       if (includeSignature) {
@@ -153,7 +162,7 @@ export class EmailsController {
         }
       }
 
-      const sendResult = await GmailService.sendEmail(userId, toEmail, email.subject || 'Outreach', finalBody);
+      const sendResult = await GmailService.sendEmail(userId, toEmail, activeSubject, finalBody);
 
       const updated = await DbService.update('emails', { id, user_id: userId }, {
         status: 'sent',
@@ -163,16 +172,20 @@ export class EmailsController {
       });
 
       if (contact) {
-        await DbService.update('contacts', { id: contact.id, user_id: userId }, {
+        const contactUpdates: any = {
           status: 'sent',
           last_contacted: new Date().toISOString(),
-        });
+        };
+        if (!contact.email && toEmail) {
+          contactUpdates.email = toEmail;
+        }
+        await DbService.update('contacts', { id: contact.id, user_id: userId }, contactUpdates);
 
         await DbService.insert('contact_timeline', {
           user_id: userId,
           contact_id: contact.id,
           action: 'sent',
-          description: `Sent email: "${email.subject}"`,
+          description: `Sent email: "${activeSubject}" to ${toEmail}`,
         });
       }
 

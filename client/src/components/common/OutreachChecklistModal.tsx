@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, AlertCircle, X, ShieldAlert, Send } from 'lucide-react';
+import { CheckCircle2, AlertCircle, X, ShieldAlert, Send, Mail, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 interface OutreachChecklistModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirmSend: (includeSignature: boolean) => Promise<void>;
+  onConfirmSend: (includeSignature: boolean, manualRecipient?: string) => Promise<void>;
   recipientEmail?: string;
   subject?: string;
   body?: string;
@@ -18,7 +18,7 @@ export const OutreachChecklistModal: React.FC<OutreachChecklistModalProps> = ({
   isOpen,
   onClose,
   onConfirmSend,
-  recipientEmail,
+  recipientEmail = '',
   subject,
   body,
   hasJobLinked,
@@ -28,26 +28,32 @@ export const OutreachChecklistModal: React.FC<OutreachChecklistModalProps> = ({
   const navigate = useNavigate();
   const [manualConfirmed, setManualConfirmed] = useState(false);
   const [includeSignature, setIncludeSignature] = useState(true);
+  const [targetEmail, setTargetEmail] = useState(recipientEmail);
+
+  useEffect(() => {
+    if (recipientEmail) {
+      setTargetEmail(recipientEmail);
+    }
+  }, [recipientEmail]);
 
   if (!isOpen) return null;
 
   const wordCount = (body || '').trim().split(/\s+/).filter(Boolean).length;
   const isGmailConnected = Boolean(user?.gmailConnected);
   const hasSubject = Boolean(subject && subject.trim().length > 0);
-  const hasValidBody = wordCount >= 30; // recommended min
-  const hasValidRecipient = Boolean(recipientEmail && recipientEmail.includes('@'));
+  const hasValidBody = wordCount >= 15; // works for Ultra-Short, Short, and Standard
+  const hasValidRecipient = Boolean(targetEmail && targetEmail.includes('@') && targetEmail.includes('.'));
 
-  const autoChecks = [
-    { label: 'Profile verified (name & professional headline)', pass: Boolean(user?.name) },
-    { label: 'Target job or context linked', pass: hasJobLinked },
+  const mandatoryChecks = [
+    { label: 'Profile verified (sender credentials)', pass: Boolean(user?.name || user?.email) },
     { label: 'Subject line is set', pass: hasSubject },
-    { label: `Email body length substantive (${wordCount} words)`, pass: hasValidBody },
-    { label: `Valid recipient address (${recipientEmail || 'Missing'})`, pass: hasValidRecipient },
-    { label: 'Inbox verified (Gmail Connected)', pass: isGmailConnected },
+    { label: `Email body substantive (${wordCount} words)`, pass: hasValidBody },
+    { label: `Valid recipient address (${targetEmail || 'Required'})`, pass: hasValidRecipient },
+    { label: 'Inbox verified (Gmail account connected)', pass: isGmailConnected },
   ];
 
-  const allAutoPassed = autoChecks.every((c) => c.pass);
-  const canSend = allAutoPassed && manualConfirmed && !isSending;
+  const allMandatoryPassed = mandatoryChecks.every((c) => c.pass);
+  const canSend = allMandatoryPassed && manualConfirmed && !isSending;
 
   return (
     <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
@@ -68,13 +74,30 @@ export const OutreachChecklistModal: React.FC<OutreachChecklistModalProps> = ({
         <h2 className="text-[20px] font-bold text-white mb-2 font-sans">
           Review & Approve Send
         </h2>
-        <p className="text-[13px] text-[#9CA3AF] mb-5">
+        <p className="text-[13px] text-[#9CA3AF] mb-4">
           MailMint strictly enforces human-in-the-loop review. Verify each checkpoint before delivering directly from your inbox.
         </p>
 
+        {/* Recipient Address Field */}
+        <div className="mb-4">
+          <label className="block text-[11px] font-mono uppercase text-[#9CA3AF] mb-1">
+            Recipient Email Address *
+          </label>
+          <div className="relative">
+            <input
+              type="email"
+              value={targetEmail}
+              onChange={(e) => setTargetEmail(e.target.value.trim())}
+              placeholder="recruiter@company.com"
+              className="w-full pl-9 pr-3 py-2 bg-[#111827] border border-[#2D3A4A] focus:border-[#00C896] rounded-[6px] text-[13px] text-white outline-none font-mono"
+            />
+            <Mail className="w-4 h-4 text-[#6B7280] absolute left-3 top-2.5" />
+          </div>
+        </div>
+
         {/* Automatic Checks */}
-        <div className="space-y-2.5 mb-5 p-3.5 rounded-[6px] bg-[#111827] border border-[#2D3A4A]">
-          {autoChecks.map((check, idx) => (
+        <div className="space-y-2 mb-4 p-3.5 rounded-[6px] bg-[#111827] border border-[#2D3A4A]">
+          {mandatoryChecks.map((check, idx) => (
             <div key={idx} className="flex items-center justify-between text-[13px]">
               <span className={check.pass ? 'text-[#F0F0F0]' : 'text-[#EF4444]'}>
                 {check.label}
@@ -86,6 +109,12 @@ export const OutreachChecklistModal: React.FC<OutreachChecklistModalProps> = ({
               )}
             </div>
           ))}
+
+          {/* Optional context info */}
+          <div className="flex items-center justify-between text-[12px] pt-1.5 border-t border-[#2D3A4A]/60 text-[#9CA3AF]">
+            <span>Target job context: {hasJobLinked ? 'Linked ✓' : 'General outreach / No role attached'}</span>
+            <span className="font-mono text-[10px] text-[#6B7280]">OPTIONAL</span>
+          </div>
         </div>
 
         {/* Include signature toggle */}
@@ -100,7 +129,7 @@ export const OutreachChecklistModal: React.FC<OutreachChecklistModalProps> = ({
         </div>
 
         {/* Manual Checkbox */}
-        <label className="flex items-start gap-3 p-3 rounded-[6px] bg-[#1F2937]/50 border border-[#2D3A4A] cursor-pointer mb-6 hover:bg-[#1F2937] transition-colors">
+        <label className="flex items-start gap-3 p-3 rounded-[6px] bg-[#1F2937]/50 border border-[#2D3A4A] cursor-pointer mb-5 hover:bg-[#1F2937] transition-colors">
           <input
             type="checkbox"
             checked={manualConfirmed}
@@ -130,12 +159,12 @@ export const OutreachChecklistModal: React.FC<OutreachChecklistModalProps> = ({
               }}
               className="px-4 py-2 bg-indigo-600 text-white font-medium text-[13px] rounded-[6px] hover:bg-indigo-500 transition-colors"
             >
-              Connect Gmail First
+              Connect Gmail in Settings
             </button>
           ) : (
             <button
               disabled={!canSend}
-              onClick={() => onConfirmSend(includeSignature)}
+              onClick={() => onConfirmSend(includeSignature, targetEmail)}
               className="flex items-center gap-2 px-5 py-2 bg-[#00C896] text-[#0D1117] font-semibold text-[13px] rounded-[6px] hover:bg-[#00b084] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_0_12px_rgba(0,200,150,0.2)]"
             >
               <Send className="w-4 h-4" />

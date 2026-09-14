@@ -324,11 +324,16 @@ export class AiService {
    */
   private static generateMockEmail(params: EmailGenerationParams): EmailGenerationResult {
     const firstName = params.contact?.name ? params.contact.name.split(' ')[0] : 'there';
-    const company = params.company?.name || 'your team';
-    const candidate = params.profile?.full_name || 'Job Seeker';
-    const role = params.job?.title || 'Software Engineering';
+    const company = params.company?.name || params.contact?.company || params.job?.company?.name || 'your team';
+    const candidate = params.profile?.full_name || params.profile?.name || 'Job Seeker';
+    const role = params.job?.title || params.contact?.job_title || 'Software Engineering';
     const headline = params.profile?.headline || 'Developer & Problem Solver';
-    const skills = (params.profile?.skills || ['React', 'TypeScript', 'Node.js']).slice(0, 3).join(', ');
+    
+    // Safely extract skills
+    const rawSkills = Array.isArray(params.profile?.skills) && params.profile.skills.length > 0
+      ? params.profile.skills
+      : ['React', 'TypeScript', 'Node.js', 'System Architecture'];
+    const skills = rawSkills.slice(0, 3).join(', ');
 
     let subject = '';
     let body = '';
@@ -340,7 +345,7 @@ export class AiService {
 
     // Handle Specialized Types
     if (params.type === 'referral') {
-      const relation = params.referralRelation || 'a shared engineering community';
+      const relation = params.referralRelation || 'our shared professional community';
       subject = `Connecting via ${relation} · ${candidate} for ${role} at ${company}`;
       body = `Hi ${firstName},\n\nI hope you’re having a great week! Reaching out as we are both connected through ${relation}. I’ve been closely tracking ${company}’s recent engineering updates and admire what the platform team has accomplished.\n\nI recently came across the open ${role} position. With my hands-on experience building full-stack products using ${skills}, I believe my background aligns closely with the role requirements.\n\nWould you be comfortable reviewing my resume or putting in a referral if you think there’s a good fit? I’d be glad to share code samples or hop on a brief call whenever convenient.\n\nThank you so much,\n${candidate}`;
       signals.push(`✓ Referral relationship verified`);
@@ -352,20 +357,20 @@ export class AiService {
       signals.push(`✓ Interview discussion topics referenced`);
     } else if (params.type === 'alumni') {
       const university = params.confirmedCollege || params.profile?.university || 'our alma mater';
-      subject = `Fellow ${university} student reaching out · ${candidate} & ${company}`;
-      body = `Hi ${firstName},\n\nI hope you’re doing well! I came across your profile while exploring alumni journeys from ${university} and was excited to see your impact at ${company}.\n\nAs a current student at ${university} focused on ${skills}, I’d love to hear your perspective on transitioning from university into the engineering team at ${company}. Would you have 10 minutes in the coming weeks for a brief virtual coffee chat?\n\nNo pressure at all—just eager to learn from your experience.\n\nWarm regards,\n${candidate}`;
+      subject = `Fellow ${university} alum reaching out · ${candidate} & ${company}`;
+      body = `Hi ${firstName},\n\nI hope you’re doing well! I came across your profile while exploring alumni journeys from ${university} and was excited to see your impact at ${company}.\n\nAs someone with a strong foundation from ${university} focused on ${skills}, I’d love to hear your perspective on transitioning from university into the engineering team at ${company}. Would you have 10 minutes in the coming weeks for a brief virtual coffee chat?\n\nNo pressure at all—just eager to learn from your experience.\n\nWarm regards,\n${candidate}`;
       signals.push(`✓ Alumni connection confirmed (${university})`);
     } else {
       // Standard Cold Outreach / Networking
       if (params.tone === 'Casual') {
         subject = `Hey ${firstName} — love what ${company} is building`;
-        body = `Hi ${firstName},\n\nHope your week is off to a good start! I’ve been following ${company} for a while and was really impressed by how your team approaches developer productivity.\n\nI’m a developer working heavily with ${skills}. I noticed the ${role} opening on your careers page and felt my recent projects would map really well to what you're building.\n\nWould love to send over my portfolio or chat for 5 minutes if you’re open to it. Either way, keep up the awesome work!\n\nBest,\n${candidate}`;
+        body = `Hi ${firstName},\n\nHope your week is off to a good start! I’ve been following ${company} for a while and was really impressed by how your team approaches developer productivity and product scale.\n\nI’m a developer working heavily with ${skills}. I noticed the ${role} opening on your careers page and felt my recent project work maps directly to what you're building.\n\nWould love to send over my portfolio or chat for 5 minutes if you’re open to it. Either way, keep up the awesome work!\n\nBest,\n${candidate}`;
       } else if (params.tone === 'Warm') {
         subject = `Passionate about ${company} · ${candidate} for ${role}`;
-        body = `Hi ${firstName},\n\nI hope you’re having a wonderful week! I’ve been following ${company}’s journey with great interest, especially your focus on engineering velocity and customer experience.\n\nAs a ${headline} with hands-on experience in ${skills}, I’d love to explore how I could contribute to your team as a ${role}. Over the past year, I’ve delivered production-ready systems that improved latency and user delight.\n\nWould you have 10 minutes for a brief introductory conversation or be open to passing my resume to the hiring manager?\n\nThank you for your time,\n${candidate}`;
+        body = `Hi ${firstName},\n\nI hope you’re having a wonderful week! I’ve been following ${company}’s journey with great interest, especially your focus on engineering velocity and customer experience.\n\nAs a ${headline} with hands-on experience in ${skills}, I’d love to explore how I could contribute to your team as a ${role}. Over the past year, I’ve delivered production-ready systems that improved latency and reliability.\n\nWould you have 10 minutes for a brief introductory conversation or be open to passing my resume to the hiring manager?\n\nThank you for your time,\n${candidate}`;
       } else if (params.tone === 'Professional') {
         subject = `${role} inquiry · ${candidate} (${skills})`;
-        body = `Dear ${firstName},\n\nI am writing to express my strong interest in the ${role} position at ${company}. Having followed your technical blog and recent product launches, I have been deeply impressed by your team’s engineering standards.\n\nMy technical background centers on ${skills}. In my previous work, I have focused on scalable architecture, automated test coverage, and reliable deployments.\n\nI have attached my resume for your review and would welcome the opportunity to discuss how my skill set can support your team’s roadmap.\n\nSincerely,\n${candidate}`;
+        body = `Dear ${firstName},\n\nI am writing to express my strong interest in the ${role} position at ${company}. Having followed your technical updates and recent product launches, I have been deeply impressed by your team’s engineering standards.\n\nMy technical background centers on ${skills}. In my previous work, I have focused on scalable architecture, automated test coverage, and reliable deployments.\n\nI have attached my resume for your review and would welcome the opportunity to discuss how my skill set can support your team’s roadmap.\n\nSincerely,\n${candidate}`;
       } else if (params.tone === 'Formal') {
         subject = `Application for ${role} — ${candidate}`;
         body = `Dear Mr./Ms. ${params.contact?.name || firstName},\n\nI am writing to formally submit my interest in the ${role} opportunity currently available at ${company}.\n\nWith comprehensive training in ${skills} and demonstrable project experience in software engineering, I am confident in my ability to execute technical responsibilities with precision and reliability. My portfolio highlights rigorous code quality, structured documentation, and effective teamwork.\n\nI welcome the privilege of an interview to discuss how my qualifications align with your organizational goals.\n\nRespectfully,\n${candidate}`;
@@ -379,6 +384,8 @@ export class AiService {
     // Adjust length
     if (params.length === 'Ultra-Short') {
       body = `Hi ${firstName},\n\nI'm reaching out regarding the ${role} role at ${company}. With expertise in ${skills}, I've built scalable systems and would love to contribute to your engineering team.\n\nWould you have 5 minutes for a quick chat, or can I send over my resume?\n\nBest,\n${candidate}`;
+    } else if (params.length === 'Short') {
+      body = `Hi ${firstName},\n\nI've been admiring ${company}'s recent technical work and wanted to introduce myself. As an engineer focused on ${skills}, I'm very interested in the ${role} position.\n\nI've delivered scalable, high-quality features in fast-paced environments and would love to bring that impact to your team. Would you be open to a 10-minute introductory conversation this week?\n\nBest regards,\n${candidate}`;
     }
 
     // Multi-Language Support
@@ -416,33 +423,60 @@ export class AiService {
    * Real LLM calling implementation (Claude / OpenAI / Anthropic)
    */
   private static async callRealLlmEmail(params: EmailGenerationParams): Promise<EmailGenerationResult> {
-    // If real API key is present, execute fetch to ENV.AI_BASE_URL
-    const response = await fetch(`${ENV.AI_BASE_URL}/v1/messages`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ENV.AI_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: ENV.AI_MODEL,
-        max_tokens: 1000,
-        system: `You are an expert career and executive outreach advisor crafting thoughtful, non-spam recruiter emails. Tone: ${params.tone}. Length preset: ${params.length}. Language: ${params.language}. Email type: ${params.type}. Voice style constraints: ${params.voiceProfile || 'Professional and concise'}.`,
-        messages: [
-          {
-            role: 'user',
-            content: `Generate a personalized recruiter email. Return JSON with 'subject' and 'body'. Candidate: ${JSON.stringify(params.profile)}, Company: ${JSON.stringify(params.company)}, Job: ${JSON.stringify(params.job)}, Contact: ${JSON.stringify(params.contact)}`,
-          },
-        ],
-      }),
-    });
+    const isAnthropic = ENV.AI_BASE_URL.includes('anthropic') || !ENV.AI_BASE_URL.includes('openai');
+
+    let response: Response;
+    if (isAnthropic) {
+      response = await fetch(`${ENV.AI_BASE_URL}/v1/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': ENV.AI_API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: ENV.AI_MODEL || 'claude-3-5-sonnet-20241022',
+          max_tokens: 1000,
+          system: `You are an expert career and executive outreach advisor crafting thoughtful, non-spam recruiter emails. Tone: ${params.tone}. Length preset: ${params.length}. Language: ${params.language}. Email type: ${params.type}. Voice style constraints: ${params.voiceProfile || 'Professional and concise'}.`,
+          messages: [
+            {
+              role: 'user',
+              content: `Generate a personalized recruiter email. Return JSON with 'subject' and 'body'. Candidate: ${JSON.stringify(params.profile)}, Company: ${JSON.stringify(params.company)}, Job: ${JSON.stringify(params.job)}, Contact: ${JSON.stringify(params.contact)}`,
+            },
+          ],
+        }),
+      });
+    } else {
+      // OpenAI-compatible format
+      response = await fetch(`${ENV.AI_BASE_URL}/v1/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${ENV.AI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: ENV.AI_MODEL || 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: `You are an expert career outreach advisor. Return JSON with 'subject' and 'body'. Tone: ${params.tone}. Length: ${params.length}. Language: ${params.language}.`,
+            },
+            {
+              role: 'user',
+              content: `Generate a personalized recruiter email. Candidate: ${JSON.stringify(params.profile)}, Company: ${JSON.stringify(params.company)}, Job: ${JSON.stringify(params.job)}, Contact: ${JSON.stringify(params.contact)}`,
+            },
+          ],
+          response_format: { type: 'json_object' },
+        }),
+      });
+    }
 
     if (!response.ok) {
       throw new Error(`AI API responded with status ${response.status}`);
     }
 
     const json: any = await response.json();
-    const content = json.content?.[0]?.text || '';
+    const content = json.content?.[0]?.text || json.choices?.[0]?.message?.content || '';
     const cleaned = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     let parsed: any;
     try {

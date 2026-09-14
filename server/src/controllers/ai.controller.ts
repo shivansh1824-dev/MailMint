@@ -23,8 +23,19 @@ export class AiController {
         confirmedCollege,
       } = req.body;
 
-      // Fetch user profile
-      const profile = await DbService.findOne('profiles', { user_id: userId });
+      // Fetch user and profile
+      const [profile, user] = await Promise.all([
+        DbService.findOne('profiles', { user_id: userId }),
+        DbService.findById('users', userId),
+      ]);
+
+      const effectiveProfile = {
+        ...(profile || {}),
+        full_name: profile?.full_name || user?.name || 'Job Seeker',
+        skills: Array.isArray(profile?.skills) && profile.skills.length > 0
+          ? profile.skills
+          : ['React', 'TypeScript', 'Node.js', 'System Design'],
+      };
 
       // Fetch resume if specified
       let resume = null;
@@ -34,9 +45,12 @@ export class AiController {
         resume = await DbService.findById('resume_versions', profile.active_resume_version_id, userId);
       }
 
-      // Fetch company, contact, job
+      const contact = contactId ? await DbService.findById('contacts', contactId, userId) : null;
+      const job = jobId ? await DbService.findById('jobs', jobId, userId) : null;
+
+      // Fetch or resolve company
       let company = companyId ? await DbService.findById('companies', companyId, userId) : null;
-      const manualCompName = (req.body.companyName || req.body.company || '').trim();
+      const manualCompName = (req.body.companyName || req.body.company || contact?.company || job?.company?.name || '').trim();
       if (!company && manualCompName) {
         company = await DbService.findOne('companies', { user_id: userId, name: manualCompName });
         if (!company) {
@@ -48,26 +62,13 @@ export class AiController {
           });
         }
       }
-      const contact = contactId ? await DbService.findById('contacts', contactId, userId) : null;
-      const job = jobId ? await DbService.findById('jobs', jobId, userId) : null;
 
-      // Validate special type constraints
-      if (type === 'referral' && !referralRelation) {
-        return res.status(400).json({
-          success: false,
-          message: 'Referral outreach requires specifying how you know the contact ("How do you know them?").',
-        });
-      }
-
-      if (type === 'alumni' && !confirmedCollege) {
-        return res.status(400).json({
-          success: false,
-          message: 'Alumni outreach requires confirming the shared college or university.',
-        });
-      }
+      // Handle type fallbacks smoothly
+      const effectiveReferral = referralRelation || (type === 'referral' ? 'our shared professional network' : undefined);
+      const effectiveCollege = confirmedCollege || profile?.university || (type === 'alumni' ? 'our alma mater' : undefined);
 
       const generated = await AiService.generateEmail({
-        profile: profile || {},
+        profile: effectiveProfile,
         resume,
         company,
         contact,
@@ -78,11 +79,11 @@ export class AiController {
         language,
         type,
         voiceProfile: profile?.voice_profile,
-        referralRelation,
+        referralRelation: effectiveReferral,
         interviewerName,
         interviewDate,
         interviewNotes,
-        confirmedCollege,
+        confirmedCollege: effectiveCollege,
       });
 
       return res.json({ success: true, ...generated });
