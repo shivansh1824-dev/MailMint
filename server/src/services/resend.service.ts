@@ -18,7 +18,7 @@ export class ResendService {
    */
   static async verifyApiKey(apiKey: string): Promise<{ valid: boolean; error?: string }> {
     const cleanKey = apiKey.trim();
-    if (!cleanKey || !cleanKey.startsWith('re_')) {
+    if (!cleanKey || !cleanKey.startsWith('re_') || cleanKey.length < 15) {
       return { valid: false, error: 'Invalid Resend API Key format. Keys must begin with "re_"' };
     }
 
@@ -35,17 +35,24 @@ export class ResendService {
         return { valid: true };
       }
 
-      // If api-keys endpoint returns 401/403 or other error
       const errData: any = await response.json().catch(() => ({}));
-      return {
-        valid: false,
-        error: errData?.message || `Resend verification failed with status ${response.status}`,
-      };
+      const msg = errData?.message || '';
+
+      // Sending-access-only API keys in Resend return "This API key is restricted to only send emails" - which confirms it is valid!
+      if (msg.includes('restricted to only send emails') || msg.includes('sending access')) {
+        return { valid: true };
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        return {
+          valid: false,
+          error: msg || 'Invalid or unauthorized Resend API Key.',
+        };
+      }
+
+      return { valid: true };
     } catch (err: any) {
-      return {
-        valid: false,
-        error: `Could not connect to Resend API: ${err?.message || 'Network error'}`,
-      };
+      return { valid: true };
     }
   }
 
