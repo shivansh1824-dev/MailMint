@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import { ENV } from '../config/env';
 import { encryptAES256, decryptAES256 } from '../utils/crypto';
 import { DbService } from './supabase.service';
+import { ResendService } from './resend.service';
 
 export class GmailService {
   private static getOAuth2Client() {
@@ -230,10 +231,32 @@ export class GmailService {
     toEmail: string,
     subject: string,
     bodyText: string
-  ): Promise<{ messageId: string; threadId: string }> {
+  ): Promise<{ messageId: string; threadId: string; provider?: string }> {
     const user = await DbService.findById('users', userId);
+
+    // 1. If Resend is configured (either on user profile or in system ENV), check if preferred
+    const hasResend = !!user?.resend_api_key || !!ENV.RESEND_API_KEY;
+    const preferResend = user?.email_provider === 'resend' || (!user?.gmail_connected && hasResend);
+
+    if (hasResend && preferResend) {
+      return await ResendService.sendEmail({
+        userId,
+        to: toEmail,
+        subject,
+        text: bodyText,
+      });
+    }
+
     if (!user || !user.gmail_connected) {
-      throw new Error('Gmail account not connected. Please connect your Gmail via App Password or OAuth in Settings.');
+      if (hasResend) {
+        return await ResendService.sendEmail({
+          userId,
+          to: toEmail,
+          subject,
+          text: bodyText,
+        });
+      }
+      throw new Error('No email service connected. Please connect Resend (Recommended) or Gmail in Settings.');
     }
 
     // A. Preferred Free Method: Nodemailer via Gmail App Password

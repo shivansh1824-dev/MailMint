@@ -20,6 +20,9 @@ create table if not exists users (
   gmail_refresh_token text,
   gmail_app_password text,
   gmail_auth_type text default 'app_password',
+  resend_api_key text,
+  resend_from_email text,
+  email_provider text default 'resend',
   plan text default 'free' check (plan in ('free', 'pro', 'team')),
   created_at timestamptz default now(),
   updated_at timestamptz default now()
@@ -28,6 +31,9 @@ create table if not exists users (
 -- Ensure migration columns exist on existing databases
 alter table if exists users add column if not exists gmail_app_password text;
 alter table if exists users add column if not exists gmail_auth_type text default 'app_password';
+alter table if exists users add column if not exists resend_api_key text;
+alter table if exists users add column if not exists resend_from_email text;
+alter table if exists users add column if not exists email_provider text default 'resend';
 
 -- 2. PROFILES
 create table if not exists profiles (

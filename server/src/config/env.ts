@@ -40,6 +40,10 @@ export const ENV = {
   DAILY_DIGEST_CRON: process.env.DAILY_DIGEST_CRON || '0 8 * * *',
   DEFAULT_TIMEZONE: process.env.DEFAULT_TIMEZONE || 'Asia/Kolkata',
 
+  // Resend Email API
+  RESEND_API_KEY: process.env.RESEND_API_KEY || '',
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+
   // Limits
   MAX_UPLOAD_SIZE_MB: parseInt(process.env.MAX_UPLOAD_SIZE_MB || '5', 10),
   MAX_CONTACTS_FREE_PLAN: parseInt(process.env.MAX_CONTACTS_FREE_PLAN || '100', 10),

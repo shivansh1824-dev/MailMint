@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { GmailService } from '../services/gmail.service';
+import { ResendService } from '../services/resend.service';
 import { DbService } from '../services/supabase.service';
 import { ENV } from '../config/env';
 
@@ -59,10 +60,51 @@ export class IntegrationsController {
     }
   }
 
+  static async connectResend(req: Request, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const { apiKey, fromEmail } = req.body;
+
+      if (!apiKey) {
+        return res.status(400).json({ success: false, message: 'Resend API Key is required.' });
+      }
+
+      const result = await ResendService.connectResend(userId, apiKey, fromEmail);
+      return res.json({
+        success: true,
+        message: `Successfully connected Resend! Emails will send from ${result.fromEmail}.`,
+        fromEmail: result.fromEmail,
+      });
+    } catch (err: any) {
+      return res.status(400).json({ success: false, message: err.message || 'Failed to connect Resend.' });
+    }
+  }
+
+  static async disconnectResend(req: Request, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      await ResendService.disconnectResend(userId);
+      return res.json({ success: true, message: 'Resend integration disconnected.' });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  }
+
   static async getGmailStatus(req: Request, res: Response) {
     const userId = req.user!.userId;
-    const status = await GmailService.getStatus(userId);
-    return res.json({ success: true, ...status });
+    const gmailStatus = await GmailService.getStatus(userId);
+    const user = await DbService.findById('users', userId);
+
+    const hasResend = !!user?.resend_api_key || !!ENV.RESEND_API_KEY;
+    const activeProvider = user?.email_provider || (hasResend ? 'resend' : gmailStatus.connected ? 'gmail' : 'none');
+
+    return res.json({
+      success: true,
+      ...gmailStatus,
+      resendConnected: hasResend,
+      resendFromEmail: user?.resend_from_email || ENV.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      activeProvider,
+    });
   }
 
   static async disconnectGmail(req: Request, res: Response) {
@@ -87,14 +129,26 @@ export class IntegrationsController {
     try {
       const userId = req.user!.userId;
       const user = await DbService.findById('users', userId);
-      const recipient = user?.gmail_email || user?.email || 'user@example.com';
+      const recipient = user?.email || user?.gmail_email || 'user@example.com';
 
-      const result = await GmailService.sendEmail(
-        userId,
-        recipient,
-        'MailMint · Verified Inbox Connection',
-        `Hello ${user?.name || ''}!\n\nYour Gmail integration is successfully connected and verified.\n\nAll outreach emails will be reviewed and sent directly through your authenticated inbox.\n\n— The MailMint Team`
-      );
+      let result: any;
+      const shouldUseResend = user?.email_provider === 'resend' || user?.resend_api_key || (!user?.gmail_connected && ENV.RESEND_API_KEY);
+
+      if (shouldUseResend) {
+        result = await ResendService.sendEmail({
+          userId,
+          to: recipient,
+          subject: 'MailMint · Verified Resend Email Connection',
+          text: `Hello ${user?.name || ''}!\n\nYour Resend integration is successfully connected and verified.\n\nOutreach emails will now send over HTTPS via Resend.\n\n— The MailMint Team`,
+        });
+      } else {
+        result = await GmailService.sendEmail(
+          userId,
+          recipient,
+          'MailMint · Verified Inbox Connection',
+          `Hello ${user?.name || ''}!\n\nYour Gmail integration is successfully connected and verified.\n\nAll outreach emails will be reviewed and sent directly through your authenticated inbox.\n\n— The MailMint Team`
+        );
+      }
 
       return res.json({ success: true, message: `Test email sent to ${recipient}`, result });
     } catch (err: any) {

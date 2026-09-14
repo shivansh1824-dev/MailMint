@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { DbService } from '../services/supabase.service';
 import { GmailService } from '../services/gmail.service';
+import { ResendService } from '../services/resend.service';
 import { AiService } from '../services/ai.service';
+import { ENV } from '../config/env';
 
 export class EmailsController {
   static async getEmails(req: Request, res: Response) {
@@ -124,10 +126,13 @@ export class EmailsController {
       }
 
       const user = await DbService.findById('users', userId);
-      if (!user?.gmail_connected) {
+      const isResendConfigured = !!user?.resend_api_key || !!ENV.RESEND_API_KEY;
+      const isGmailConfigured = !!user?.gmail_connected;
+
+      if (!isResendConfigured && !isGmailConfigured) {
         return res.status(400).json({
           success: false,
-          message: 'Gmail is not connected. Please connect your Gmail account in Settings or use Google App Password.',
+          message: 'No email service connected. Please connect Resend (Recommended for Cloud) or Gmail in Settings.',
         });
       }
 
