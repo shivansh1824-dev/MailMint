@@ -28,21 +28,31 @@ export class GmailService {
     }
 
     // 1. Verify SMTP connection with Google
-    // Use explicit host/port + force IPv4 (family: 4) because Render free tier
-    // does not support outbound IPv6 — nodemailer with service:'gmail' would pick
-    // an IPv6 address and fail with ENETUNREACH.
-    // We pass a custom dnsLookup that filters to IPv4 only.
-    const { lookup } = require('dns');
-    const ipv4Lookup = (hostname: string, opts: any, cb: any) => lookup(hostname, { ...opts, family: 4 }, cb);
+    // Resolve host explicitly to IPv4 to prevent ENETUNREACH errors on cloud hosting (Render/containers)
+    // where outbound IPv6 is blocked or unrouted.
+    let hostAddress = 'smtp.gmail.com';
+    try {
+      const dns = require('dns').promises;
+      const res = await dns.lookup('smtp.gmail.com', { family: 4 });
+      if (res && res.address) {
+        hostAddress = res.address;
+      }
+    } catch {
+      // Fallback to default hostname if DNS lookup fails
+    }
+
     const transporter = (nodemailer as any).createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,         // STARTTLS (not SSL/465)
+      host: hostAddress,
+      port: 465,
+      secure: true,
       auth: {
         user: cleanEmail,
         pass: cleanPass,
       },
-      dnsLookup: ipv4Lookup,  // Force IPv4 — Render free tier blocks IPv6 outbound
+      tls: {
+        servername: 'smtp.gmail.com',
+      },
+      servername: 'smtp.gmail.com',
       connectionTimeout: 10000,
       greetingTimeout: 10000,
       socketTimeout: 15000,
@@ -231,17 +241,29 @@ export class GmailService {
       const senderEmail = user.gmail_email || ENV.SMTP_USER;
       const plainPassword = appPasswordEncrypted ? decryptAES256(appPasswordEncrypted) : ENV.SMTP_PASS;
 
-      const { lookup } = require('dns');
-      const ipv4Lookup = (hostname: string, opts: any, cb: any) => lookup(hostname, { ...opts, family: 4 }, cb);
+      let hostAddress = 'smtp.gmail.com';
+      try {
+        const dns = require('dns').promises;
+        const res = await dns.lookup('smtp.gmail.com', { family: 4 });
+        if (res && res.address) {
+          hostAddress = res.address;
+        }
+      } catch {
+        // Fallback to default hostname
+      }
+
       const transporter = (nodemailer as any).createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,         // STARTTLS
+        host: hostAddress,
+        port: 465,
+        secure: true,
         auth: {
           user: senderEmail,
           pass: plainPassword,
         },
-        dnsLookup: ipv4Lookup,  // Force IPv4 — Render free tier blocks IPv6 outbound
+        tls: {
+          servername: 'smtp.gmail.com',
+        },
+        servername: 'smtp.gmail.com',
         connectionTimeout: 10000,
         greetingTimeout: 10000,
         socketTimeout: 15000,
