@@ -167,7 +167,20 @@ export class EmailsController {
         }
       }
 
-      const sendResult = await GmailService.sendEmail(userId, toEmail, activeSubject, finalBody);
+      let sendResult: { messageId: string; threadId: string; provider?: string };
+      const hasResend = !!user?.resend_api_key || !!ENV.RESEND_API_KEY;
+      const shouldUseResend = user?.email_provider === 'resend' || (hasResend && (!user?.gmail_connected || user?.email_provider !== 'gmail'));
+
+      if (shouldUseResend) {
+        sendResult = await ResendService.sendEmail({
+          userId,
+          to: toEmail,
+          subject: activeSubject,
+          text: finalBody,
+        });
+      } else {
+        sendResult = await GmailService.sendEmail(userId, toEmail, activeSubject, finalBody);
+      }
 
       const updated = await DbService.update('emails', { id, user_id: userId }, {
         status: 'sent',

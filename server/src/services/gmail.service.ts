@@ -239,19 +239,12 @@ export class GmailService {
     const isExplicitGmail = user?.email_provider === 'gmail';
 
     if (hasResend && (!isExplicitGmail || !user?.gmail_connected)) {
-      try {
-        return await ResendService.sendEmail({
-          userId,
-          to: toEmail,
-          subject,
-          text: bodyText,
-        });
-      } catch (resendErr: any) {
-        console.warn('Resend send attempt notice:', resendErr?.message);
-        if (!user?.gmail_connected) {
-          throw resendErr;
-        }
-      }
+      return await ResendService.sendEmail({
+        userId,
+        to: toEmail,
+        subject,
+        text: bodyText,
+      });
     }
 
     if (!user || !user.gmail_connected) {
