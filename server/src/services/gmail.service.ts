@@ -44,6 +44,7 @@ export class GmailService {
         host: hostAddress,
         port: 465,
         secure: true,
+        family: 4,
         auth: {
           user: cleanEmail,
           pass: cleanPass,
@@ -260,6 +261,7 @@ export class GmailService {
           host: hostAddress,
           port: 465,
           secure: true,
+          family: 4,
           auth: {
             user: senderEmail,
             pass: plainPassword,
@@ -291,16 +293,19 @@ export class GmailService {
 
         try {
           const transporter587 = (nodemailer as any).createTransport({
-            host: 'smtp.gmail.com',
+            host: hostAddress,
             port: 587,
             secure: false,
+            family: 4,
             auth: {
               user: senderEmail,
               pass: plainPassword,
             },
             tls: {
               servername: 'smtp.gmail.com',
+              rejectUnauthorized: false,
             },
+            servername: 'smtp.gmail.com',
             connectionTimeout: 10000,
             greetingTimeout: 10000,
             socketTimeout: 15000,

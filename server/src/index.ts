@@ -4,6 +4,16 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
+import dns from 'dns';
+
+// Force Node.js to resolve IPv4 addresses first to avoid ENETUNREACH on systems without IPv6 routing
+try {
+  if (typeof dns.setDefaultResultOrder === 'function') {
+    dns.setDefaultResultOrder('ipv4first');
+  }
+} catch {
+  // Ignored
+}
 
 import { ENV } from './config/env';
 import { errorHandler } from './middleware/errorHandler';
