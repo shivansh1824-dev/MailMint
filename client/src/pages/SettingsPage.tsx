@@ -36,6 +36,7 @@ export const SettingsPage: React.FC = () => {
   const [appPassword, setAppPassword] = useState('');
   const [isConnectingAppPassword, setIsConnectingAppPassword] = useState(false);
   const [appPasswordError, setAppPasswordError] = useState('');
+  const [appPasswordSuccess, setAppPasswordSuccess] = useState('');
   const [connectMethod, setConnectMethod] = useState<'app_password' | 'oauth'>('app_password');
 
   const fetchStatus = async () => {
@@ -77,6 +78,7 @@ export const SettingsPage: React.FC = () => {
   const handleConnectAppPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setAppPasswordError('');
+    setAppPasswordSuccess('');
     setIsConnectingAppPassword(true);
     try {
       const res = await api.post('/integrations/gmail/app-password', {
@@ -84,10 +86,15 @@ export const SettingsPage: React.FC = () => {
         appPassword,
       });
       if (res.success) {
-        alert(res.message || 'Connected Gmail via App Password!');
-        refreshUser();
-        fetchStatus();
+        setAppPasswordSuccess(res.message || `Successfully connected ${res.email || appPasswordEmail}!`);
+        setGmailStatus({
+          connected: true,
+          email: res.email || appPasswordEmail,
+          updatedAt: new Date().toISOString(),
+        });
         setAppPassword('');
+        await refreshUser();
+        await fetchStatus();
       }
     } catch (err: any) {
       setAppPasswordError(err.message || 'Failed to connect. Please verify your App Password.');
@@ -255,6 +262,13 @@ export const SettingsPage: React.FC = () => {
                     />
                   </div>
                 </div>
+
+                {appPasswordSuccess && (
+                  <div className="p-2.5 bg-[#00A878]/15 dark:bg-[#00C896]/15 border border-[#00A878]/30 dark:border-[#00C896]/30 rounded text-[12px] text-[#00A878] dark:text-[#00C896] flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>{appPasswordSuccess}</span>
+                  </div>
+                )}
 
                 {appPasswordError && (
                   <div className="p-2.5 bg-red-500/10 border border-red-500/25 rounded text-[12px] text-red-600 dark:text-red-400">
