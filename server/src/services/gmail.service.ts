@@ -234,17 +234,24 @@ export class GmailService {
   ): Promise<{ messageId: string; threadId: string; provider?: string }> {
     const user = await DbService.findById('users', userId);
 
-    // 1. If Resend is configured (either on user profile or in system ENV), check if preferred
+    // 1. If Resend is configured (either on user profile or in system ENV), prioritize Resend for reliable HTTPS dispatch
     const hasResend = !!user?.resend_api_key || !!ENV.RESEND_API_KEY;
-    const preferResend = user?.email_provider === 'resend' || (!user?.gmail_connected && hasResend);
+    const isExplicitGmail = user?.email_provider === 'gmail';
 
-    if (hasResend && preferResend) {
-      return await ResendService.sendEmail({
-        userId,
-        to: toEmail,
-        subject,
-        text: bodyText,
-      });
+    if (hasResend && (!isExplicitGmail || !user?.gmail_connected)) {
+      try {
+        return await ResendService.sendEmail({
+          userId,
+          to: toEmail,
+          subject,
+          text: bodyText,
+        });
+      } catch (resendErr: any) {
+        console.warn('Resend send attempt notice:', resendErr?.message);
+        if (!user?.gmail_connected) {
+          throw resendErr;
+        }
+      }
     }
 
     if (!user || !user.gmail_connected) {
@@ -294,9 +301,9 @@ export class GmailService {
             rejectUnauthorized: false,
           },
           servername: 'smtp.gmail.com',
-          connectionTimeout: 10000,
-          greetingTimeout: 10000,
-          socketTimeout: 15000,
+          connectionTimeout: 8000,
+          greetingTimeout: 8000,
+          socketTimeout: 10000,
         });
 
         info = await transporter465.sendMail({
@@ -329,9 +336,9 @@ export class GmailService {
               rejectUnauthorized: false,
             },
             servername: 'smtp.gmail.com',
-            connectionTimeout: 10000,
-            greetingTimeout: 10000,
-            socketTimeout: 15000,
+            connectionTimeout: 8000,
+            greetingTimeout: 8000,
+            socketTimeout: 10000,
           });
 
           info = await transporter587.sendMail({
@@ -344,6 +351,17 @@ export class GmailService {
           lastError = err587;
           if (err587?.code === 'EAUTH' || err587?.responseCode === 535) {
             throw new Error('Google authentication failed. Please verify your 16-character App Password at myaccount.google.com/apppasswords.');
+          }
+
+          // If SMTP connection timed out or blocked by cloud hosting firewall (e.g. Render), auto-fallback to Resend
+          if (hasResend) {
+            console.warn('SMTP connection timed out on cloud host; automatically falling back to Resend API over HTTPS:', err587?.message);
+            return await ResendService.sendEmail({
+              userId,
+              to: toEmail,
+              subject,
+              text: bodyText,
+            });
           }
 
           // If network connection or SMTP is blocked in local environment / offline
