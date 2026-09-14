@@ -120,14 +120,18 @@ export class ResendService {
     // 1. Resolve API Key
     let apiKey = options.apiKey;
     if (!apiKey && user?.resend_api_key) {
-      apiKey = decryptAES256(user.resend_api_key);
+      if (user.resend_api_key.startsWith('re_')) {
+        apiKey = user.resend_api_key;
+      } else {
+        apiKey = decryptAES256(user.resend_api_key) || user.resend_api_key;
+      }
     }
     if (!apiKey) {
       apiKey = ENV.RESEND_API_KEY;
     }
 
     if (!apiKey) {
-      throw new Error('No Resend API Key configured. Please add your Resend API Key in Settings or set RESEND_API_KEY environment variable.');
+      throw new Error('No Resend API Key configured. Please add your Resend API Key in Settings.');
     }
 
     // 2. Resolve From Email
